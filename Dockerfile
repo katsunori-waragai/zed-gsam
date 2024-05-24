@@ -48,8 +48,10 @@ RUN wget --quiet https://github.com/IDEA-Research/GroundingDINO/releases/downloa
 # RUN gdown --fuzzy https://drive.google.com/file/d/1Uk17tDKX1YAKas5knI4y9ZJCo0lRVL0G/view?usp=sharing
 
 COPY *.sh *.py setup.cfg /root/Grounded-Segment-Anything/
-COPY zedhelper/ /root/Grounded-Segment-Anything/
-COPY tutorial_script/  /root/Grounded-Segment-Anything/
+RUN mkdir -p zedhelper/
+RUN mkdir -p tutorial_script/
+COPY zedhelper/* /root/Grounded-Segment-Anything/zedhelper
+COPY tutorial_script/*  /root/Grounded-Segment-Anything/tutorial_script
 
 # only for development
 RUN apt update && apt install -y eog nano
