@@ -1,3 +1,7 @@
+.idea/
+*.run
+*.pth
+*.engine
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
