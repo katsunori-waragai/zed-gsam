@@ -47,7 +47,7 @@ RUN wget --quiet https://github.com/IDEA-Research/GroundingDINO/releases/downloa
 # RUN gdown --fuzzy https://drive.google.com/file/d/1qobFYrI4eyIANfBSmYcGuWRaSIXfMOQ8/view?usp=sharing
 # RUN gdown --fuzzy https://drive.google.com/file/d/1Uk17tDKX1YAKas5knI4y9ZJCo0lRVL0G/view?usp=sharing
 
-COPY *.sh *.py /root/Grounded-Segment-Anything/
+COPY *.sh *.py setup.cfg /root/Grounded-Segment-Anything/
 COPY zedhelper/ /root/Grounded-Segment-Anything/
 COPY tutorial_script/  /root/Grounded-Segment-Anything/
 
