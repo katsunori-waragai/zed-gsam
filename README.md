@@ -1,3 +1,6 @@
+# zed-gsam
+grounded-segment-anything with ZED SDK
+
 ## grounded-SAM docker
 - docker environment for grounded SAM
 https://github.com/IDEA-Research/Grounded-Segment-Anything
