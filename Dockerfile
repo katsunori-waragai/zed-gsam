@@ -10,7 +10,7 @@ ENV CUDA_HOME /usr/local/cuda-11.4/
 RUN cd /root && git clone https://github.com/IDEA-Research/Grounded-Segment-Anything.git
 
 WORKDIR /root
-RUN wget -O --quiet ZED_SDK_Tegra_L4T35.3_v4.1.0.zstd.run https://download.stereolabs.com/zedsdk/4.1/l4t35.2/jetsons
+RUN wget --quiet -O ZED_SDK_Tegra_L4T35.3_v4.1.0.zstd.run https://download.stereolabs.com/zedsdk/4.1/l4t35.2/jetsons
 RUN chmod +x ZED_SDK_Tegra_L4T35.3_v4.1.0.zstd.run
 RUN apt update
 RUN apt install zstd
