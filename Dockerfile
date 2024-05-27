@@ -15,6 +15,8 @@ RUN apt update && apt install -y --no-install-recommends wget ffmpeg=7:* \
     vim=2:* \
     zstd
 RUN apt clean -y && apt autoremove -y && rm -rf /var/lib/apt/lists/*
+# only for development
+RUN apt update && apt install -y eog nano
 
 ENV ZED_SDK_INSTALLER=ZED_SDK_Tegra_L4T35.3_v4.1.0.zstd.run
 RUN wget --quiet -O ${ZED_SDK_INSTALLER} https://download.stereolabs.com/zedsdk/4.1/l4t35.2/jetsons
@@ -27,6 +29,7 @@ RUN python3 -m pip install --no-cache-dir wheel
 RUN python3 -m pip install --no-cache-dir --no-build-isolation -e GroundingDINO
 
 WORKDIR /root
+RUN python3 -m pip uninstall opecv-python-headless opencv-contrib-python
 RUN python3 -m pip install --no-cache-dir diffusers[torch]==0.15.1 opencv-python==3.4.18.65 \
     pycocotools==2.0.6 matplotlib==3.5.3 \
     onnxruntime==1.14.1 onnx==1.13.1 ipykernel==6.16.2 scipy gradio openai mediapipe
@@ -52,6 +55,3 @@ RUN mkdir -p zedhelper/
 RUN mkdir -p tutorial_script/
 COPY zedhelper/* /root/Grounded-Segment-Anything/zedhelper/
 COPY tutorial_script/*  /root/Grounded-Segment-Anything/tutorial_script/
-
-# only for development
-RUN apt update && apt install -y eog nano
