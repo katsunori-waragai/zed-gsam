@@ -251,7 +251,7 @@ class GroundedSAMPredictor:
     )
     dino_checkpoint: str = str(FOLDER_ROOT / "groundingdino_swint_ogc.pth")
     device: str = "cuda"
-    sam_version: str = "vit_h"  # "SAM ViT version: vit_b / vit_l / vit_h"
+    sam_version: str = "vit_l"  # "SAM ViT version: vit_b / vit_l / vit_h"
     use_sam_hq: bool = False
     text_prompt: str = "arm . cup . keyboard . table . plate . bottle . PC . person"
     box_threshold: float = 0.3
