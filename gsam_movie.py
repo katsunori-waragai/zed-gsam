@@ -64,8 +64,8 @@ if __name__ == "__main__":
         masks = gsam_predictor.masks
 
         t6 = cv2.getTickCount()
-        colorized = colorize(gen_mask_img(masks).cpu().numpy())
-        # colorized = colorize_torch(gen_mask_img(masks)).cpu().numpy()
+        # colorized = colorize(gen_mask_img(masks).cpu().numpy())
+        colorized = colorize_torch(gen_mask_img(masks)).cpu().numpy()
         output_mask_jpg = output_dir / f"{filename_stem}_mask.jpg"
         cv2.imwrite(str(output_mask_jpg), colorized)
         mask_json = output_mask_jpg.with_suffix(".json")
