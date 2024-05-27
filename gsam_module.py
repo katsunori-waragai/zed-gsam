@@ -72,12 +72,10 @@ def to_json(label_list: List[str], box_list: List, background_value: int = 0) ->
 
 
 def colorize(segmentation_result: np.ndarray) -> np.ndarray:
-    print(f"{segmentation_result.shape=}")
     height, width = segmentation_result.shape[-2:]
     if len(segmentation_result.shape) == 3:
         segmentation_result = segmentation_result.reshape((height, width))
     color_image = np.zeros((height, width, 3), dtype=np.uint8)
-    print(f"{color_image.shape=}")
     num_colors = len(COLOR_ARRAY)
     maxint = int(np.max(segmentation_result.flatten()))
     for i in range(maxint + 1):
@@ -86,14 +84,11 @@ def colorize(segmentation_result: np.ndarray) -> np.ndarray:
 
 
 def colorize_torch(segmentation_result: torch.Tensor) -> torch.Tensor:
-    print(f"{segmentation_result.shape=}")
-
     height, width = segmentation_result.shape[-2:]
     if len(segmentation_result.shape) == 3:
         segmentation_result = segmentation_result.reshape((height, width))
 
     color_image = torch.zeros((height, width, 3), dtype=torch.uint8, device=segmentation_result.device)
-    print(f"{color_image.shape=}")
 
     num_colors = len(COLOR_ARRAY)
     maxint = int(segmentation_result.max().item())
@@ -194,11 +189,9 @@ def gen_mask_img(mask_list: torch.Tensor, background_value=0) -> torch.Tensor:
     device = mask_list.device  # mask_listが存在するデバイスを取得
     H, W = mask_list.shape[-2:]
     mask_img = torch.zeros((1, H, W), device=device)  # 同じデバイス上で初期化
-    print(f"{mask_img.shape=}")
 
     # mask_listの各マスクに対して、マスクがTrueの位置に対応する値を設定
     for idx in range(mask_list.shape[0]):
-        print(f"{mask_list[idx].shape=}")
         mask_img += (mask_list[idx].float() * (background_value + idx + 1))
 
     return mask_img
