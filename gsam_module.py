@@ -30,30 +30,53 @@ from GroundingDINO.groundingdino.util.utils import (
 # segment anything
 from segment_anything import sam_model_registry, sam_hq_model_registry, SamPredictor
 
-COLOR_MAP = {
-    0: [0, 0, 0],  # 黒
-    1: [0, 255, 0],  # 緑
-    2: [0, 0, 255],  # 青
-    3: [255, 0, 0],  # 赤
-    4: [255, 255, 0],  # 黄色
-    5: [255, 0, 255],  # マゼンタ
-    6: [0, 255, 255],  # シアン
-    7: [128, 128, 128],  # グレー
-    8: [128, 0, 0],  # マルーン
-    9: [128, 128, 0],  # オリーブ
-    10: [0, 128, 0],  # ダークグリーン
-    11: [0, 128, 128],  # ティール
-    12: [0, 0, 128],  # ネイビー
-    13: [255, 165, 0],  # オレンジ
-    14: [255, 215, 0],  # ゴールド
-    15: [173, 216, 230],  # ライトブルー
-    16: [75, 0, 130],  # インディゴ
-    17: [240, 128, 128],  # ライトコーラル
-    18: [244, 164, 96],  # サドルブラウン
-    19: [60, 179, 113],  # ミディアムシーブルー
-}
+# COLOR_MAP = {
+#     0: [0, 0, 0],  # 黒
+#     1: [0, 255, 0],  # 緑
+#     2: [0, 0, 255],  # 青
+#     3: [255, 0, 0],  # 赤
+#     4: [255, 255, 0],  # 黄色
+#     5: [255, 0, 255],  # マゼンタ
+#     6: [0, 255, 255],  # シアン
+#     7: [128, 128, 128],  # グレー
+#     8: [128, 0, 0],  # マルーン
+#     9: [128, 128, 0],  # オリーブ
+#     10: [0, 128, 0],  # ダークグリーン
+#     11: [0, 128, 128],  # ティール
+#     12: [0, 0, 128],  # ネイビー
+#     13: [255, 165, 0],  # オレンジ
+#     14: [255, 215, 0],  # ゴールド
+#     15: [173, 216, 230],  # ライトブルー
+#     16: [75, 0, 130],  # インディゴ
+#     17: [240, 128, 128],  # ライトコーラル
+#     18: [244, 164, 96],  # サドルブラウン
+#     19: [60, 179, 113],  # ミディアムシーブルー
+# }
+#
+# COLOR_MAP_ARRAY = np.array([COLOR_MAP[i] for i in range(len(COLOR_MAP))])
 
-COLOR_MAP_ARRAY = np.array([COLOR_MAP[i] for i in range(len(COLOR_MAP))])
+COLOR_MAP_ARRAY = np.array([
+    [0, 0, 0],  # 黒
+    [0, 255, 0],  # 緑
+    [0, 0, 255],  # 青
+    [255, 0, 0],  # 赤
+    [255, 255, 0],  # 黄色
+    [255, 0, 255],  # マゼンタ
+    [0, 255, 255],  # シアン
+    [128, 128, 128],  # グレー
+    [128, 0, 0],  # マルーン
+    [128, 128, 0],  # オリーブ
+    [0, 128, 0],  # ダークグリーン
+    [0, 128, 128],  # ティール
+    [0, 0, 128],  # ネイビー
+    [255, 165, 0],  # オレンジ
+    [255, 215, 0],  # ゴールド
+    [173, 216, 230],  # ライトブルー
+    [75, 0, 130],  # インディゴ
+    [240, 128, 128],  # ライトコーラル
+    [244, 164, 96],  # サドルブラウン
+    [60, 179, 113],  # ミディアムシーブルー
+])
 
 def to_json(label_list: List[str], box_list: List, background_value: int = 0) -> Dict:
     value = background_value
@@ -80,10 +103,10 @@ def colorize(segmentation_result: np.ndarray) -> np.ndarray:
         segmentation_result = segmentation_result.reshape((height, width))
     color_image = np.zeros((height, width, 3), dtype=np.uint8)
     print(f"{color_image.shape=}")
-    num_colors = len(COLOR_MAP)
+    num_colors = len(COLOR_MAP_ARRAY)
     maxint = int(np.max(segmentation_result.flatten()))
     for i in range(maxint + 1):
-        color_image[segmentation_result == i] = COLOR_MAP[i % num_colors]
+        color_image[segmentation_result == i] = COLOR_MAP_ARRAY[i % num_colors]
     return color_image
 
 
