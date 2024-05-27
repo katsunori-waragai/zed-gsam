@@ -9,11 +9,26 @@ import cv2
 import numpy as np
 import json
 import torch
-from PIL import Image
-from pathlib import Path
-from typing import List, Dict
+
+rom gsam_module import FOLDER_ROOT, to_json, colorize, gen_mask_img, overlay_image, SAM_CHECKPOINT_FILES, \
+    GroundedSAMPredictor
+
+sys.path.append(str(FOLDER_ROOT / "GroundingDINO"))
+sys.path.append(str(FOLDER_ROOT / "segment_anything"))
 
 
+# Grounding DINO
+import GroundingDINO.groundingdino.datasets.transforms as T
+from GroundingDINO.groundingdino.models import build_model
+from GroundingDINO.groundingdino.util.slconfig import SLConfig
+from GroundingDINO.groundingdino.util.utils import (
+    clean_state_dict,
+    get_phrases_from_posmap,
+)
+
+
+# segment anything
+from segment_anything import sam_model_registry, sam_hq_model_registry, SamPredictor
 FOLDER_ROOT = Path(__file__).resolve().parent
 COLOR_MAP = {
     0: [0, 0, 0],  # 黒
