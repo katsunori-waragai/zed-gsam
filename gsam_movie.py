@@ -4,7 +4,7 @@ import json
 
 import cv2
 
-from gsam_module import to_json, colorize, gen_mask_img, overlay_image, GroundedSAMPredictor
+from gsam_module import to_json, colorize, colorize_torch, gen_mask_img, overlay_image, GroundedSAMPredictor
 
 if __name__ == "__main__":
 
