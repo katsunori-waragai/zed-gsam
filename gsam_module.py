@@ -86,6 +86,27 @@ def colorize(segmentation_result: np.ndarray) -> np.ndarray:
     return color_image
 
 
+def colorize_torch(segmentation_result: torch.Tensor) -> torch.Tensor:
+    print(f"{segmentation_result.shape=}")
+
+    height, width = segmentation_result.shape[-2:]
+    if len(segmentation_result.shape) == 3:
+        segmentation_result = segmentation_result.reshape((height, width))
+
+    color_image = torch.zeros((height, width, 3), dtype=torch.uint8, device=segmentation_result.device)
+    print(f"{color_image.shape=}")
+
+    num_colors = len(COLOR_MAP)
+    maxint = int(segmentation_result.max().item())
+
+    color_map_tensor = torch.tensor(COLOR_MAP, dtype=torch.uint8, device=segmentation_result.device)
+
+    for i in range(maxint + 1):
+        mask = (segmentation_result == i)
+        color_image[mask] = color_map_tensor[i % num_colors]
+
+    return color_image
+
 def pil2cv(image: Image) -> np.ndarray:
     """PIL型 -> OpenCV型"""
     new_image = np.array(image, dtype=np.uint8)
