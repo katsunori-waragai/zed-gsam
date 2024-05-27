@@ -8,8 +8,7 @@ import json
 import cv2
 import numpy as np
 
-from gsam import GroundedSAMPredictor, colorize, overlay_image, gen_mask_img, to_json
-
+from gsam_module import to_json, colorize, gen_mask_img, overlay_image, GroundedSAMPredictor
 
 if __name__ == "__main__":
 
