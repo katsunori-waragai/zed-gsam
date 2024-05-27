@@ -168,10 +168,13 @@ def _get_grounding_output(
 
 def gen_mask_img(mask_list: torch.Tensor, background_value=0) -> torch.Tensor:
     device = mask_list.device  # mask_listが存在するデバイスを取得
-    mask_img = torch.zeros(mask_list.shape[-2:], device=device)  # 同じデバイス上で初期化
+    H, W = mask_list.shape[-2:]
+    mask_img = torch.zeros((1, H, W), device=device)  # 同じデバイス上で初期化
+    print(f"{mask_img.shape=}")
 
     # mask_listの各マスクに対して、マスクがTrueの位置に対応する値を設定
     for idx in range(mask_list.shape[0]):
+        print(f"{mask_list[idx].shape=}")
         mask_img += (mask_list[idx].float() * (background_value + idx + 1))
 
     return mask_img
@@ -318,5 +321,5 @@ class GroundedSAMPredictor:
         self.pred_phrases = pred_phrases
         self.masks = masks
         self.boxes_filt = boxes_filt
-        self.colorized = colorize(gen_mask_img(masks).numpy())
+        # self.colorized = colorize(gen_mask_img(masks).numpy())
         self.used = used
