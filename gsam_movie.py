@@ -7,6 +7,7 @@ import cv2
 from gsam_module import to_json, colorize, gen_mask_img, overlay_image, GroundedSAMPredictor
 
 if __name__ == "__main__":
+import numpy as np
 
     parser = argparse.ArgumentParser(
         description="Grounded-Segment-Anything for USB camera"

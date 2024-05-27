@@ -1,15 +1,9 @@
 import argparse
-import os
 import sys
-from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Dict
 
 import cv2
-import numpy as np
 import json
-import torch
-from PIL import Image
 
 from gsam_module import FOLDER_ROOT, to_json, colorize, gen_mask_img, overlay_image, SAM_CHECKPOINT_FILES, \
     GroundedSAMPredictor
