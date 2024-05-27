@@ -120,7 +120,7 @@ def colorize_torch(segmentation_result: torch.Tensor) -> torch.Tensor:
     color_image = torch.zeros((height, width, 3), dtype=torch.uint8, device=segmentation_result.device)
     print(f"{color_image.shape=}")
 
-    num_colors = len(COLOR_MAP)
+    num_colors = len(COLOR_MAP_ARRAY)
     maxint = int(segmentation_result.max().item())
 
     color_map_tensor = torch.tensor(COLOR_MAP_ARRAY, dtype=torch.uint8, device=segmentation_result.device)
