@@ -53,6 +53,7 @@ COLOR_MAP = {
     19: [60, 179, 113],  # ミディアムシーブルー
 }
 
+COLOR_MAP_ARRAY = np.array([COLOR_MAP[i] for i in range(len(COLOR_MAP))])
 
 def to_json(label_list: List[str], box_list: List, background_value: int = 0) -> Dict:
     value = background_value
@@ -99,7 +100,7 @@ def colorize_torch(segmentation_result: torch.Tensor) -> torch.Tensor:
     num_colors = len(COLOR_MAP)
     maxint = int(segmentation_result.max().item())
 
-    color_map_tensor = torch.tensor(COLOR_MAP, dtype=torch.uint8, device=segmentation_result.device)
+    color_map_tensor = torch.tensor(COLOR_MAP_ARRAY, dtype=torch.uint8, device=segmentation_result.device)
 
     for i in range(maxint + 1):
         mask = (segmentation_result == i)
