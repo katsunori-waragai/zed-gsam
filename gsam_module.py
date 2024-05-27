@@ -30,29 +30,28 @@ from GroundingDINO.groundingdino.util.utils import (
 # segment anything
 from segment_anything import sam_model_registry, sam_hq_model_registry, SamPredictor
 
-COLOR_MAP = {
-    0: [0, 0, 0],  # 黒
-    1: [0, 255, 0],  # 緑
-    2: [0, 0, 255],  # 青
-    3: [255, 0, 0],  # 赤
-    4: [255, 255, 0],  # 黄色
-    5: [255, 0, 255],  # マゼンタ
-    6: [0, 255, 255],  # シアン
-    7: [128, 128, 128],  # グレー
-    8: [128, 0, 0],  # マルーン
-    9: [128, 128, 0],  # オリーブ
-    10: [0, 128, 0],  # ダークグリーン
-    11: [0, 128, 128],  # ティール
-    12: [0, 0, 128],  # ネイビー
-    13: [255, 165, 0],  # オレンジ
-    14: [255, 215, 0],  # ゴールド
-    15: [173, 216, 230],  # ライトブルー
-    16: [75, 0, 130],  # インディゴ
-    17: [240, 128, 128],  # ライトコーラル
-    18: [244, 164, 96],  # サドルブラウン
-    19: [60, 179, 113],  # ミディアムシーブルー
-}
-
+COLOR_ARRAY = np.array([
+    [0, 0, 0],  # 黒
+    [0, 255, 0],  # 緑
+    [0, 0, 255],  # 青
+    [255, 0, 0],  # 赤
+    [255, 255, 0],  # 黄色
+    [255, 0, 255],  # マゼンタ
+    [0, 255, 255],  # シアン
+    [128, 128, 128],  # グレー
+    [128, 0, 0],  # マルーン
+    [128, 128, 0],  # オリーブ
+    [0, 128, 0],  # ダークグリーン
+    [0, 128, 128],  # ティール
+    [0, 0, 128],  # ネイビー
+    [255, 165, 0],  # オレンジ
+    [255, 215, 0],  # ゴールド
+    [173, 216, 230],  # ライトブルー
+    [75, 0, 130],  # インディゴ
+    [240, 128, 128],  # ライトコーラル
+    [244, 164, 96],  # サドルブラウン
+    [60, 179, 113],  # ミディアムシーブルー
+])
 
 def to_json(label_list: List[str], box_list: List, background_value: int = 0) -> Dict:
     value = background_value
@@ -73,14 +72,34 @@ def to_json(label_list: List[str], box_list: List, background_value: int = 0) ->
 
 
 def colorize(segmentation_result: np.ndarray) -> np.ndarray:
-    height, width = segmentation_result.shape
+    height, width = segmentation_result.shape[-2:]
+    if len(segmentation_result.shape) == 3:
+        segmentation_result = segmentation_result.reshape((height, width))
     color_image = np.zeros((height, width, 3), dtype=np.uint8)
-    num_colors = len(COLOR_MAP)
+    num_colors = len(COLOR_ARRAY)
     maxint = int(np.max(segmentation_result.flatten()))
     for i in range(maxint + 1):
-        color_image[segmentation_result == i] = COLOR_MAP[i % num_colors]
+        color_image[segmentation_result == i] = COLOR_ARRAY[i % num_colors]
     return color_image
 
+
+def colorize_torch(segmentation_result: torch.Tensor) -> torch.Tensor:
+    height, width = segmentation_result.shape[-2:]
+    if len(segmentation_result.shape) == 3:
+        segmentation_result = segmentation_result.reshape((height, width))
+
+    color_image = torch.zeros((height, width, 3), dtype=torch.uint8, device=segmentation_result.device)
+
+    num_colors = len(COLOR_ARRAY)
+    maxint = int(segmentation_result.max().item())
+
+    color_map_tensor = torch.tensor(COLOR_ARRAY, dtype=torch.uint8, device=segmentation_result.device)
+
+    for i in range(maxint + 1):
+        mask = (segmentation_result == i)
+        color_image[mask] = color_map_tensor[i % num_colors]
+
+    return color_image
 
 def pil2cv(image: Image) -> np.ndarray:
     """PIL型 -> OpenCV型"""
@@ -167,9 +186,14 @@ def _get_grounding_output(
 
 
 def gen_mask_img(mask_list: torch.Tensor, background_value=0) -> torch.Tensor:
-    mask_img = torch.zeros(mask_list.shape[-2:])
-    for idx, mask in enumerate(mask_list):
-        mask_img[mask.cpu().numpy()[0] == True] = background_value + idx + 1
+    device = mask_list.device  # mask_listが存在するデバイスを取得
+    H, W = mask_list.shape[-2:]
+    mask_img = torch.zeros((1, H, W), device=device)  # 同じデバイス上で初期化
+
+    # mask_listの各マスクに対して、マスクがTrueの位置に対応する値を設定
+    for idx in range(mask_list.shape[0]):
+        mask_img += (mask_list[idx].float() * (background_value + idx + 1))
+
     return mask_img
 
 
@@ -240,7 +264,7 @@ class GroundedSAMPredictor:
     )
     dino_checkpoint: str = str(FOLDER_ROOT / "groundingdino_swint_ogc.pth")
     device: str = "cuda"
-    sam_version: str = "vit_h"  # "SAM ViT version: vit_b / vit_l / vit_h"
+    sam_version: str = "vit_l"  # "SAM ViT version: vit_b / vit_l / vit_h"
     use_sam_hq: bool = False
     text_prompt: str = "arm . cup . keyboard . table . plate . bottle . PC . person"
     box_threshold: float = 0.3
@@ -314,5 +338,5 @@ class GroundedSAMPredictor:
         self.pred_phrases = pred_phrases
         self.masks = masks
         self.boxes_filt = boxes_filt
-        self.colorized = colorize(gen_mask_img(masks).numpy())
+        # self.colorized = colorize(gen_mask_img(masks).numpy())
         self.used = used
