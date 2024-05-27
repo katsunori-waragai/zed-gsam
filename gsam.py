@@ -18,19 +18,6 @@ sys.path.append(str(FOLDER_ROOT / "GroundingDINO"))
 sys.path.append(str(FOLDER_ROOT / "segment_anything"))
 
 
-# Grounding DINO
-import GroundingDINO.groundingdino.datasets.transforms as T
-from GroundingDINO.groundingdino.models import build_model
-from GroundingDINO.groundingdino.util.slconfig import SLConfig
-from GroundingDINO.groundingdino.util.utils import (
-    clean_state_dict,
-    get_phrases_from_posmap,
-)
-
-
-# segment anything
-from segment_anything import sam_model_registry, sam_hq_model_registry, SamPredictor
-
 print(f"{ SAM_CHECKPOINT_FILES['vit_h']=}")
 print(f"{ SAM_CHECKPOINT_FILES['vit_h'].split('/')[-1]=}")
 

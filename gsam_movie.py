@@ -1,12 +1,8 @@
 import argparse
-import os
-import sys
 from pathlib import Path
-from typing import List, Dict
 import json
 
 import cv2
-import numpy as np
 
 from gsam_module import to_json, colorize, gen_mask_img, overlay_image, GroundedSAMPredictor
 
