@@ -75,6 +75,8 @@ def to_json(label_list: List[str], box_list: List, background_value: int = 0) ->
 def colorize(segmentation_result: np.ndarray) -> np.ndarray:
     print(f"{segmentation_result.shape=}")
     height, width = segmentation_result.shape[-2:]
+    if len(segmentation_result.shape) == 3:
+        segmentation_result = segmentation_result.reshape((height, width))
     color_image = np.zeros((height, width, 3), dtype=np.uint8)
     print(f"{color_image.shape=}")
     num_colors = len(COLOR_MAP)
