@@ -30,7 +30,7 @@ from GroundingDINO.groundingdino.util.utils import (
 # segment anything
 from segment_anything import sam_model_registry, sam_hq_model_registry, SamPredictor
 
-COLOR_MAP_ARRAY = np.array([
+COLOR_ARRAY = np.array([
     [0, 0, 0],  # 黒
     [0, 255, 0],  # 緑
     [0, 0, 255],  # 青
@@ -78,10 +78,10 @@ def colorize(segmentation_result: np.ndarray) -> np.ndarray:
         segmentation_result = segmentation_result.reshape((height, width))
     color_image = np.zeros((height, width, 3), dtype=np.uint8)
     print(f"{color_image.shape=}")
-    num_colors = len(COLOR_MAP_ARRAY)
+    num_colors = len(COLOR_ARRAY)
     maxint = int(np.max(segmentation_result.flatten()))
     for i in range(maxint + 1):
-        color_image[segmentation_result == i] = COLOR_MAP_ARRAY[i % num_colors]
+        color_image[segmentation_result == i] = COLOR_ARRAY[i % num_colors]
     return color_image
 
 
@@ -95,10 +95,10 @@ def colorize_torch(segmentation_result: torch.Tensor) -> torch.Tensor:
     color_image = torch.zeros((height, width, 3), dtype=torch.uint8, device=segmentation_result.device)
     print(f"{color_image.shape=}")
 
-    num_colors = len(COLOR_MAP_ARRAY)
+    num_colors = len(COLOR_ARRAY)
     maxint = int(segmentation_result.max().item())
 
-    color_map_tensor = torch.tensor(COLOR_MAP_ARRAY, dtype=torch.uint8, device=segmentation_result.device)
+    color_map_tensor = torch.tensor(COLOR_ARRAY, dtype=torch.uint8, device=segmentation_result.device)
 
     for i in range(maxint + 1):
         mask = (segmentation_result == i)
