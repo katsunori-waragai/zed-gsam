@@ -1,5 +1,4 @@
 import argparse
-import sys
 from pathlib import Path
 
 import cv2
@@ -8,12 +7,6 @@ import json
 from gsam_module import FOLDER_ROOT, to_json, colorize, gen_mask_img, overlay_image, SAM_CHECKPOINT_FILES, \
     GroundedSAMPredictor
 
-sys.path.append(str(FOLDER_ROOT / "GroundingDINO"))
-sys.path.append(str(FOLDER_ROOT / "segment_anything"))
-
-
-print(f"{ SAM_CHECKPOINT_FILES['vit_h']=}")
-print(f"{ SAM_CHECKPOINT_FILES['vit_h'].split('/')[-1]=}")
 
 if __name__ == "__main__":
 
