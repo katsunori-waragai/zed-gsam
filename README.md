@@ -91,6 +91,16 @@ used_time={'dino': 0.513170818, 'sam': 1.073418961, 'save_mask': 0.21821957, 'sa
 used_time={'dino': 0.517417823, 'sam': 1.097062882, 'save_mask': 0.237811434, 'save_sam': 0.227442488}
 used_time={'dino': 0.512869719, 'sam': 1.089623328, 'save_mask': 0.218557809, 'save_sam': 0.087464781}
 used_time={'dino': 0.518495263, 'sam': 1.090717183, 'save_mask': 0.196923878, 'save_sam': 0.086473765}
+
+
+vit_l after rewrite colorize
+used_time={'dino': 4.030211321, 'sam': 1.590754872, 'save_mask': 0.035906197, 'save_sam': 0.089683123}
+used_time={'dino': 0.592950903, 'sam': 1.06226808, 'save_mask': 0.035588211, 'save_sam': 0.084375166}
+used_time={'dino': 0.521227664, 'sam': 1.076035211, 'save_mask': 0.036222646, 'save_sam': 0.083167352}
+used_time={'dino': 0.514938775, 'sam': 1.056210652, 'save_mask': 0.035514004, 'save_sam': 0.086267813}
+used_time={'dino': 0.539096924, 'sam': 1.078318202, 'save_mask': 0.034063533, 'save_sam': 0.083769339}
+used_time={'dino': 0.512772464, 'sam': 1.059245805, 'save_mask': 0.032677928, 'save_sam': 0.082560951}
+
 ```
 
 ### segmentation quality
