@@ -116,11 +116,12 @@ def main():
             cv_depth_img = depth_for_display.get_data()
             if cvimg is not None:
                 print(f"{cvimg.shape=}")
-                gsam_predictor.infer_all(cvimg)
+                cvimg_bgr = cvimg[:, :, :3].copy()
+                gsam_predictor.infer_all(cvimg_bgr)
                 colorized = gsam_module.colorize_torch(gen_mask_img(masks)).cpu().numpy()
                 pred_phrases = gsam_predictor.pred_phrases
                 boxes_filt = gsam_predictor.boxes_filt
-                blend_image = gsam_module.overlay_image(boxes_filt, pred_phrases, cvimg, colorized)
+                blend_image = gsam_module.overlay_image(boxes_filt, pred_phrases, cvimg_bgr, colorized)
                 cv2.imshow("output", blend_image)
 
             if use_hand:
