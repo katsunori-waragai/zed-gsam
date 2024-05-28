@@ -118,6 +118,7 @@ def main():
                 print(f"{cvimg.shape=}")
                 cvimg_bgr = cvimg[:, :, :3].copy()
                 gsam_predictor.infer_all(cvimg_bgr)
+                masks = gsam_predictor.masks
                 colorized = gsam_module.colorize_torch(gsam_module.gen_mask_img(masks)).cpu().numpy()
                 pred_phrases = gsam_predictor.pred_phrases
                 boxes_filt = gsam_predictor.boxes_filt
