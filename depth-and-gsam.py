@@ -114,13 +114,13 @@ def main():
             # Retrieve objects
             cvimg = image.get_data()
             cv_depth_img = depth_for_display.get_data()
-
-            gsam_predictor.infer_all(cvimg)
-            colorized = gsam_module.colorize_torch(gen_mask_img(masks)).cpu().numpy()
-            pred_phrases = gsam_predictor.pred_phrases
-            boxes_filt = gsam_predictor.boxes_filt
-            blend_image = gsam_module.overlay_image(boxes_filt, pred_phrases, cvimg, colorized)
-            cv2.imshow("output", blend_image)
+            if cvimg is not None:
+                gsam_predictor.infer_all(cvimg)
+                colorized = gsam_module.colorize_torch(gen_mask_img(masks)).cpu().numpy()
+                pred_phrases = gsam_predictor.pred_phrases
+                boxes_filt = gsam_predictor.boxes_filt
+                blend_image = gsam_module.overlay_image(boxes_filt, pred_phrases, cvimg, colorized)
+                cv2.imshow("output", blend_image)
 
             if use_hand:
                 detection_result = hand_marker.detect(cvimg)
