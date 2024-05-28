@@ -26,6 +26,7 @@ from GroundingDINO.groundingdino.util.utils import (
     get_phrases_from_posmap,
 )
 
+__VERSION__ = "0.10"
 
 # segment anything
 from segment_anything import sam_model_registry, sam_hq_model_registry, SamPredictor
