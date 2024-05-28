@@ -38,6 +38,9 @@
 - https://github.com/SysCV/sam-hq?tab=readme-ov-file#model-checkpoints
 - [x] SAM Vit version を軽量なモデルに切り替えることで高速化したい。
   - vit_b に切り替えた。
+- [] zedhelper のインストール
+- [] gsam_module のモジュールライブラリ化
+- [] モジュールライブラリで使用すデータの所在の対応
 - [] git clone を不要にしたい。
 - [] pip でインストール可能なモジュールに自作モジュールを改変したい。
   - [] 連動して学習済みモデルのおく場所もpip でのインストール先に変更したい。
