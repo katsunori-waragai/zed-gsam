@@ -115,6 +115,7 @@ def main():
             cvimg = image.get_data()
             cv_depth_img = depth_for_display.get_data()
             if cvimg is not None:
+                print(f"{cvimg.shape=}")
                 gsam_predictor.infer_all(cvimg)
                 colorized = gsam_module.colorize_torch(gen_mask_img(masks)).cpu().numpy()
                 pred_phrases = gsam_predictor.pred_phrases
