@@ -59,7 +59,7 @@ def parse_args(init):
 
 
 def main():
-    gsam_predictor = GroundedSAMPredictor(
+    gsam_predictor = gsam_module.GroundedSAMPredictor(
         text_prompt="arm . cup . keyboard . table . plate . bottle . PC . person",
         text_threshold=0.25,
         box_threshold=0.3,
@@ -116,10 +116,10 @@ def main():
             cv_depth_img = depth_for_display.get_data()
 
             gsam_predictor.infer_all(image)
-            colorized = colorize_torch(gen_mask_img(masks)).cpu().numpy()
+            colorized = gsam_module.colorize_torch(gen_mask_img(masks)).cpu().numpy()
             pred_phrases = gsam_predictor.pred_phrases
             boxes_filt = gsam_predictor.boxes_filt
-            blend_image = overlay_image(boxes_filt, pred_phrases, cvimage, colorized)
+            blend_image = gsam_module.overlay_image(boxes_filt, pred_phrases, cvimage, colorized)
             cv2.imshow("output", blend_image)
 
             if use_hand:
