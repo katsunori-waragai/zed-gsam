@@ -183,9 +183,9 @@ def main():
                 for i, selected in enumerate(selected_list):
                     print(f"{i=} {pred_phrases[i]=} {selected=}")
                     print(f"{selected.shape=}")
-                    print(f"{np.percentile(selected[0], (5, 95))=}")
-                    print(f"{np.percentile(selected[1], (5, 95))=}")
-                    print(f"{np.percentile(selected[2], (5, 95))=}")
+                    print(f"{np.percentile(selected[:, 0], (5, 95))=}")
+                    print(f"{np.percentile(selected[:, 1], (5, 95))=}")
+                    print(f"{np.percentile(selected[:, 2], (5, 95))=}")
                 cv2.imshow("output", blend_image)
 
             if use_hand:
