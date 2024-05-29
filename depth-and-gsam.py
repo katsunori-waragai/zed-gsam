@@ -174,7 +174,7 @@ def main():
                 boxes_filt = gsam_predictor.boxes_filt
                 blend_image = gsam_module.overlay_image(boxes_filt, pred_phrases, cvimg_bgr, colorized)
                 blend_image = resize_image(blend_image, 0.5)
-                C, H, W = uint_masks.shape[:2]
+                C, H, W = uint_masks.shape[:3]
                 assert C == 1
                 for selected in points_by_segmentation(points, uint_masks.reshape(H, W)):
                     print(f"{selected=}")
