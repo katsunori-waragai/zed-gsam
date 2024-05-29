@@ -77,7 +77,7 @@ def points_by_segmentation(points: np.ndarray, segmentation_image: np.ndarray):
     """
     # Check the dtype of the inputs
     assert points.dtype in [np.float32, np.float64], "points must be of type float32 or float64"
-    assert segmentation_image.dtype == np.uint8, "segmentation_image must be of type uint8"
+#    assert segmentation_image.dtype in [np.uint8, np.int], "segmentation_image must be of type uint8"
 
     # Check the shape of the inputs
     assert points.ndim == 3, "points must be a 3D array (height, width, channels)"
