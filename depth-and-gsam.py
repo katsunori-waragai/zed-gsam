@@ -132,10 +132,17 @@ def main():
                 gsam_predictor.infer_all(cvimg_bgr)
                 masks = gsam_predictor.masks
                 colorized = gsam_module.colorize_torch(gsam_module.gen_mask_img(masks)).cpu().numpy()
+                uint_masks = gsam_module.gen_mask_img(masks).cpu().numpy()
                 pred_phrases = gsam_predictor.pred_phrases
                 boxes_filt = gsam_predictor.boxes_filt
                 blend_image = gsam_module.overlay_image(boxes_filt, pred_phrases, cvimg_bgr, colorized)
                 blend_image = resize_image(blend_image, 0.5)
+                for i, phrase in enumerate(pred_phrases):
+                    if phrase.find("bottle") > -1:
+                        selected_points = points[uint_masks == i + 1]
+                        print(f"{np.percentile(selected_points[0], (5, 95))=}")
+                        print(f"{np.percentile(selected_points[1], (5, 95))=}")
+                        print(f"{np.percentile(selected_points[2], (5, 95))=}")
                 cv2.imshow("output", blend_image)
 
             if use_hand:
