@@ -139,6 +139,8 @@ def main():
                 blend_image = resize_image(blend_image, 0.5)
                 for i, phrase in enumerate(pred_phrases):
                     if phrase.find("bottle") > -1:
+                        print(f"{uint_masks.shape=}")
+                        print(f"{points.shape=}")
                         selected_points = points[uint_masks == i + 1]
                         print(f"{np.percentile(selected_points[0], (5, 95))=}")
                         print(f"{np.percentile(selected_points[1], (5, 95))=}")
