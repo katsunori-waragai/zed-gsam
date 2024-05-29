@@ -170,7 +170,7 @@ def main():
                 masks = gsam_predictor.masks
                 colorized = gsam_module.colorize_torch(gsam_module.gen_mask_img(masks)).cpu().numpy()
                 uint_masks = gsam_module.gen_mask_img(masks).cpu().numpy()
-                mask_val = np.unique(uint_masks).astype(np.int)
+                mask_val = np.unique(uint_masks).astype(np.int16)
                 # mask_val が連続的な整数ではないことが判明した。
                 print(f"{mask_val=}　{len(mask_val)}")
 
