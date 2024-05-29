@@ -75,7 +75,30 @@ def points_by_segmentation(points: np.ndarray, segmentation_image: np.ndarray):
 
     戻り値は、各セグメンテーションに対応するpointsのsubsetのリストを返す。
     """
-    pass
+    # Check the dtype of the inputs
+    assert points.dtype in [np.float32, np.float64], "points must be of type float32 or float64"
+    assert segmentation_image.dtype == np.uint8, "segmentation_image must be of type uint8"
+
+    # Check the shape of the inputs
+    assert points.ndim == 3, "points must be a 3D array (height, width, channels)"
+    assert segmentation_image.ndim == 2, "segmentation_image must be a 2D array (height, width)"
+    assert points.shape[
+           :2] == segmentation_image.shape, "points and segmentation_image must have the same height and width"
+
+    # Get unique segmentation labels
+    unique_labels = np.unique(segmentation_image)
+
+    # Initialize a list to hold points for each segmentation label
+    segmented_points = []
+
+    # Iterate through unique labels and collect corresponding points
+    for label in unique_labels:
+        mask = segmentation_image == label
+        labeled_points = points[mask]
+        segmented_points.append(labeled_points)
+
+    return segmented_points
+
 
 def main():
     gsam_predictor = gsam_module.GroundedSAMPredictor(
@@ -151,6 +174,10 @@ def main():
                 boxes_filt = gsam_predictor.boxes_filt
                 blend_image = gsam_module.overlay_image(boxes_filt, pred_phrases, cvimg_bgr, colorized)
                 blend_image = resize_image(blend_image, 0.5)
+                H, W = segmentation_image.shape[:2]
+                for selected in points_by_segmentation(points, segmentation_image.reshape(H, W)):
+                    print(f"{selected=}")
+
                 for i, phrase in enumerate(pred_phrases):
                     if phrase.find("bottle") > -1:
                         print(f"{uint_masks.shape=}")
