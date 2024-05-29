@@ -176,18 +176,11 @@ def main():
                 blend_image = resize_image(blend_image, 0.5)
                 C, H, W = uint_masks.shape[:3]
                 assert C == 1
-                for selected in points_by_segmentation(points, uint_masks.reshape(H, W)):
-                    print(f"{selected=}")
-
-                for i, phrase in enumerate(pred_phrases):
-                    if phrase.find("bottle") > -1:
-                        print(f"{uint_masks.shape=}")
-                        print(f"{points.shape=}")
-                        # 次の行で動作しない。
-                        selected_points = points[uint_masks == i + 1]
-                        print(f"{np.percentile(selected_points[0], (5, 95))=}")
-                        print(f"{np.percentile(selected_points[1], (5, 95))=}")
-                        print(f"{np.percentile(selected_points[2], (5, 95))=}")
+                for i, selected in enumerate(points_by_segmentation(points, uint_masks.reshape(H, W))):
+                    print(f"{i=} {pred_phrases[i]=} {selected=}")
+                    print(f"{np.percentile(selected[0], (5, 95))=}")
+                    print(f"{np.percentile(selected[1], (5, 95))=}")
+                    print(f"{np.percentile(selected[2], (5, 95))=}")
                 cv2.imshow("output", blend_image)
 
             if use_hand:
