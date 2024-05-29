@@ -20,10 +20,16 @@ https://github.com/IDEA-Research/Grounded-Segment-Anything
 - ユーザー作成ファイルのCOPY
 - ZED SDK のインストール
 
-### status
-sh docker_build.sh 
-sh docker_run.sh
-succeeded.
+### 環境構築手順
+1. **docker コンテナの作成:**
+    ```bash
+    sh docker_build.sh
+    ```
+
+2. **docker コンテナの実行:**
+    ```bash
+    sh docker_run.sh
+    ```
 
 ## usage
 ## depth-and-gsam.py
