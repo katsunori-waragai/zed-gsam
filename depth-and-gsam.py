@@ -58,7 +58,7 @@ def parse_args(init):
         print("[Sample] Using default resolution")
 
 
-def resize_image(image, rate):
+def resize_image(image: np.ndarray, rate: float) -> np.ndarray:
     H, W = image.shape[:2]
     return cv2.resize(image, (int(W * rate), int(H * rate)))
 
@@ -127,7 +127,6 @@ def main():
                 pred_phrases = gsam_predictor.pred_phrases
                 boxes_filt = gsam_predictor.boxes_filt
                 blend_image = gsam_module.overlay_image(boxes_filt, pred_phrases, cvimg_bgr, colorized)
-                H, W = blend_image.shape[:2]
                 blend_image = resize_image(blend_image, 0.5)
                 cv2.imshow("output", blend_image)
 
