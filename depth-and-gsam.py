@@ -119,6 +119,12 @@ def main():
             # Retrieve objects
             cvimg = image.get_data()
             cv_depth_img = depth_for_display.get_data()
+
+            # 空間座標を得ることが必要。
+            zed.retrieve_measure(point_cloud, sl.MEASURE.XYZRGBA)
+            points = point_cloud.get_data()
+            print(f"{points.shape=}")
+            # points[y, x]で、元画像上の点と対応がつくのかどうか？
             if cvimg is not None:
                 print(f"{cvimg.shape=}")
                 cvimg_bgr = cvimg[:, :, :3].copy()
