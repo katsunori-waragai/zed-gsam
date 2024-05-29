@@ -73,6 +73,9 @@ def points_by_segmentation(points: np.ndarray, segmentation_image: np.ndarray):
     segmentationの添字はheight, width の順番である。
     セグメンテーションの分類はuint8 の整数で分類済みである。
 
+    なお、background に対するpointsのデータを返しても有用性が低そうなので、
+    いったんは、除外することとした。
+
     戻り値は、各セグメンテーションに対応するpointsのsubsetのリストを返す。
     """
     # Check the dtype of the inputs
