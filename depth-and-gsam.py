@@ -67,8 +67,10 @@ def points_by_segmentation(points: np.ndarray, segmentation_image: np.ndarray):
     """
     segmentationは結果を元に、対応する点群の範囲を返す。
     points: height, width, channel の構成
+    pointsは添字の順番がheight, width, channelの順番である。
     chanelには、X, Y, Z, colorが含まれている。
     segmentation_imageは、height, width のデータ
+    segmentationの添字はheight, width の順番である。
     セグメンテーションの分類はuint8 の整数で分類済みである。
 
     戻り値は、各セグメンテーションに対応するpointsのsubsetのリストを返す。

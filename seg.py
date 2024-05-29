@@ -1,6 +1,8 @@
+from typing import List
+
 import numpy as np
 
-def points_by_segmentation(points: np.ndarray, segmentation_image: np.ndarray):
+def points_by_segmentation(points: np.ndarray, segmentation_image: np.ndarray) -> List[np.ndarray]:
     """
     segmentationは結果を元に、対応する点群の範囲を返す。
     points: height, width, channel の構成
