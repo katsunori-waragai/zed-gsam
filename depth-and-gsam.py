@@ -93,6 +93,9 @@ def points_by_segmentation(points: np.ndarray, segmentation_image: np.ndarray):
 
     # Iterate through unique labels and collect corresponding points
     for label in unique_labels:
+        if label == 0:
+            # 0 は background です。
+            continue
         mask = segmentation_image == label
         labeled_points = points[mask]
         segmented_points.append(labeled_points)
