@@ -170,8 +170,10 @@ def main():
                 masks = gsam_predictor.masks
                 colorized = gsam_module.colorize_torch(gsam_module.gen_mask_img(masks)).cpu().numpy()
                 uint_masks = gsam_module.gen_mask_img(masks).cpu().numpy()
-                mask_val = np.unique(uint_masks)
-                print(f"{mask_val=}")
+                mask_val = np.unique(uint_masks).astype(np.int)
+                # mask_val が連続的な整数ではないことが判明した。
+                print(f"{mask_val=}　{len(mask_val)}")
+
                 pred_phrases = gsam_predictor.pred_phrases
                 boxes_filt = gsam_predictor.boxes_filt
                 blend_image = gsam_module.overlay_image(boxes_filt, pred_phrases, cvimg_bgr, colorized)
