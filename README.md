@@ -1,21 +1,59 @@
 # zed-gsam
 grounded-segment-anything with ZED SDK
 
-## grounded-SAM docker
-- docker environment for grounded SAM
+ZED SDK は、カメラ画像の取得、depth画像の取得、点群の取得に用いられる。
+このリポジトリでは、Open Vocabularyでのセグメンテーションと点群との連動を検証する。
+
+## grounded-SAMとは
+- grounded SAM
 https://github.com/IDEA-Research/Grounded-Segment-Anything
+- Open Vocabularyでのセグメンテーション を実行します。
+
+### 必要環境
+- Jetson AGX orin
+- あるいは、NVIDIA GPU の使えるLinux PC
+
 
 ### Dockerファイル内での処理
 - GroundedSAMを使うための環境構築
 - GroundedSAMを使うためのpre-trained file のダウンロード
 - ユーザー作成ファイルのCOPY
+- ZED SDK のインストール
 
-### status
-sh docker_build.sh 
-sh docker_run.sh
-succeeded.
+### 環境構築手順
+1. **docker コンテナの作成:**
+    ```bash
+    sh docker_build.sh
+    ```
+
+2. **docker コンテナの実行:**
+    ```bash
+    sh docker_run.sh
+    ```
 
 ## usage
+## depth-and-gsam.py
+- ZED2i カメラをzed-sdkからの入力として、画像を取得し、対象物のセグメンテーション
+```commandline
+python3 depth-and-sam.py
+```
+- 表示内容
+- grounded-sam での検出・セグメンテーションの表示
+- mediapipe でのhand-landmark の表示
+- zed sdkによるdepth画像のグレースケールでの表示
+
+### 追加したい機能
+- セグメンテーションに対応するdepth領域の算出
+- 改変例：
+  - bottle の領域ごとに、対応する単連結領域をdepth 画像から点群のうちの対応する領域を見つけられること。
+  - 対象物についてロバストに位置を算出できること。
+  - ボトルならば、最近接点・左右端の位置が出ること。
+  - ボトルの場合ならば、見えていない背面側の位置も算出できること。
+- その領域に対する空間情報への換算
+- 把持すべき場所の算出・アフォーダンス
+### 改善したいポイント
+- グレースケールから擬似カラー表示への変換
+
 ### test_cap_and_demo.sh
 USBカメラから画像を取得・保存して、その画像に対して、grounded-SAMのdemo相当の処理を行う。
 
