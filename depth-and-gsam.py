@@ -7,6 +7,7 @@ import pyzed.sl as sl
 import argparse
 
 import cv2
+import numpy as np
 
 import zedhelper.handmark
 from zedhelper import predefined
