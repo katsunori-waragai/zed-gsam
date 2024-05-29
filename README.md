@@ -1,9 +1,18 @@
 # zed-gsam
 grounded-segment-anything with ZED SDK
 
-## grounded-SAM docker
-- docker environment for grounded SAM
+ZED SDK は、カメラ画像の取得、depth画像の取得、点群の取得に用いられる。
+このリポジトリでは、Open Vocabularyでのセグメンテーションと点群との連動を検証する。
+
+## grounded-SAMとは
+- grounded SAM
 https://github.com/IDEA-Research/Grounded-Segment-Anything
+- Open Vocabularyでのセグメンテーション を実行します。
+
+### 必要環境
+- Jetson AGX orin
+- あるいは、NVIDIA GPU の使えるLinux PC
+
 
 ### Dockerファイル内での処理
 - GroundedSAMを使うための環境構築
