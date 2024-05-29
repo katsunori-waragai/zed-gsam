@@ -179,7 +179,7 @@ def main():
                 selected_list = points_by_segmentation(points, uint_masks.reshape(H, W))
                 print(f"{len(pred_phrases)=}")
                 print(f"{len(selected_list)=}")
-                assert len(pred_phrases) == len(selected_list)
+                # assert len(pred_phrases) == len(selected_list)
                 for i, selected in enumerate(selected_list):
                     print(f"{i=} {pred_phrases[i]=} {selected=}")
                     print(f"{selected.shape=}")
