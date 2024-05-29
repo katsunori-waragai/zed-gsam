@@ -174,8 +174,8 @@ def main():
                 boxes_filt = gsam_predictor.boxes_filt
                 blend_image = gsam_module.overlay_image(boxes_filt, pred_phrases, cvimg_bgr, colorized)
                 blend_image = resize_image(blend_image, 0.5)
-                H, W = segmentation_image.shape[:2]
-                for selected in points_by_segmentation(points, segmentation_image.reshape(H, W)):
+                H, W = uint_masks.shape[:2]
+                for selected in points_by_segmentation(points, uint_masks.reshape(H, W)):
                     print(f"{selected=}")
 
                 for i, phrase in enumerate(pred_phrases):
