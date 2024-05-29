@@ -100,6 +100,7 @@ def main():
     image = sl.Mat()
     depth_map = sl.Mat()
     depth_for_display = sl.Mat()
+    point_cloud = sl.Mat()
 
 
     # Set runtime parameters
