@@ -9,6 +9,7 @@ https://github.com/IDEA-Research/Grounded-Segment-Anything
 - GroundedSAMを使うための環境構築
 - GroundedSAMを使うためのpre-trained file のダウンロード
 - ユーザー作成ファイルのCOPY
+- ZED SDK のインストール
 
 ### status
 sh docker_build.sh 
@@ -16,6 +17,23 @@ sh docker_run.sh
 succeeded.
 
 ## usage
+## depth-and-gsam.py
+- ZED2i カメラをzed-sdkからの入力として、画像を取得し、対象物のセグメンテーション
+```commandline
+python3 depth-and-sam.py
+```
+- 表示内容
+- grounded-sam での検出・セグメンテーションの表示
+- mediapipe でのhand-landmark の表示
+- zed sdkによるdepth画像のグレースケールでの表示
+
+### 追加したい機能
+- セグメンテーションに対応するdepth領域の算出
+- その領域に対する空間情報への換算
+- 把持すべき場所の算出・アフォーダンス
+### 改善したいポイント
+- グレースケールから擬似カラー表示への変換
+
 ### test_cap_and_demo.sh
 USBカメラから画像を取得・保存して、その画像に対して、grounded-SAMのdemo相当の処理を行う。
 
