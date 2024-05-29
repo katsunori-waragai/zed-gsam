@@ -7,6 +7,7 @@ import pyzed.sl as sl
 import argparse
 
 import cv2
+import numpy as np
 
 import zedhelper.handmark
 from zedhelper import predefined
@@ -57,6 +58,10 @@ def parse_args(init):
     else:
         print("[Sample] Using default resolution")
 
+
+def resize_image(image: np.ndarray, rate: float) -> np.ndarray:
+    H, W = image.shape[:2]
+    return cv2.resize(image, (int(W * rate), int(H * rate)))
 
 def main():
     gsam_predictor = gsam_module.GroundedSAMPredictor(
@@ -123,13 +128,14 @@ def main():
                 pred_phrases = gsam_predictor.pred_phrases
                 boxes_filt = gsam_predictor.boxes_filt
                 blend_image = gsam_module.overlay_image(boxes_filt, pred_phrases, cvimg_bgr, colorized)
+                blend_image = resize_image(blend_image, 0.5)
                 cv2.imshow("output", blend_image)
 
             if use_hand:
                 detection_result = hand_marker.detect(cvimg)
                 annotated_image = hand_marker.draw_landmarks(detection_result)
-                cv2.imshow("annotated_image", cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
-            cv2.imshow("depth_for_display", cv_depth_img)
+                cv2.imshow("annotated_image", resize_image(cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR), 0.5))
+            cv2.imshow("depth_for_display", resize_image(cv_depth_img, 0.5))
             key = cv2.waitKey(1)
             if key == ord("q"):
                 break
