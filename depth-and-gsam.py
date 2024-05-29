@@ -187,8 +187,8 @@ def main():
                 print(f"{len(pred_phrases)=}")
                 print(f"{len(selected_list)=}")
                 # assert len(pred_phrases) == len(selected_list)
-                for i, selected in enumerate(selected_list):
-                    print(f"{i=} {pred_phrases[i]=} {selected=}")
+                for i, selected, phrase in enumerate(zip(selected_list, pred_phrases)):
+                    print(f"{i=} {pred_phrases[i]=} {selected=} {phrase=}")
                     print(f"{selected.shape=}")
                     print(f"{np.percentile(selected[:, 0], (5, 95))=}")
                     print(f"{np.percentile(selected[:, 1], (5, 95))=}")
