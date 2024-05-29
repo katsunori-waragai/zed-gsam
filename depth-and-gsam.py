@@ -193,6 +193,12 @@ def main():
                     print(f"{np.percentile(selected[:, 0], (5, 95))=}")
                     print(f"{np.percentile(selected[:, 1], (5, 95))=}")
                     print(f"{np.percentile(selected[:, 2], (5, 95))=}")
+                    x_per = np.percentile(selected[:, 0], (5, 95))
+                    y_per = np.percentile(selected[:, 1], (5, 95))
+                    z_per = np.percentile(selected[:, 2], (5, 95))
+                    print(f"{x_per[1] - x_per[0]=}")
+                    print(f"{y_per[1] - y_per[0]=}")
+                    print(f"{z_per[1] - z_per[0]=}")
                 cv2.imshow("output", blend_image)
 
             if use_hand:
