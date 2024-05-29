@@ -16,23 +16,16 @@ def points_by_segmentation(points: np.ndarray, segmentation_image: np.ndarray):
     # Get unique segmentation labels
     unique_labels = np.unique(segmentation_image)
     
-    # Initialize a dictionary to hold points for each segmentation label
-    segmented_points = {label: [] for label in unique_labels}
+    # Initialize a list to hold points for each segmentation label
+    segmented_points = []
     
-    # Iterate through the segmentation image
-    height, width = segmentation_image.shape
-    for h in range(height):
-        for w in range(width):
-            label = segmentation_image[h, w]
-            point = points[h, w, :]
-            segmented_points[label].append(point)
+    # Iterate through unique labels and collect corresponding points
+    for label in unique_labels:
+        mask = segmentation_image == label
+        labeled_points = points[mask]
+        segmented_points.append(labeled_points)
     
-    # Convert lists to numpy arrays
-    for label in segmented_points:
-        segmented_points[label] = np.array(segmented_points[label])
-    
-    # Return list of arrays
-    return [segmented_points[label] for label in unique_labels]
+    return segmented_points
 
 # Example usage
 if __name__ == "__main__":
@@ -44,5 +37,4 @@ if __name__ == "__main__":
     segmented_points_list = points_by_segmentation(points, segmentation_image)
     for idx, segment in enumerate(segmented_points_list):
         print(f"Segment {idx} points:\n", segment)
-
 
