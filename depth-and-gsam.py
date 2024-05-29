@@ -63,6 +63,18 @@ def resize_image(image: np.ndarray, rate: float) -> np.ndarray:
     H, W = image.shape[:2]
     return cv2.resize(image, (int(W * rate), int(H * rate)))
 
+def points_by_segmentation(points: np.ndarray, segmentation_image: np.ndarray):
+    """
+    segmentationは結果を元に、対応する点群の範囲を返す。
+    points: height, width, channel の構成
+    chanelには、X, Y, Z, colorが含まれている。
+    segmentation_imageは、height, width のデータ
+    セグメンテーションの分類はuint8 の整数で分類済みである。
+
+    戻り値は、各セグメンテーションに対応するpointsのsubsetのリストを返す。
+    """
+    pass
+
 def main():
     gsam_predictor = gsam_module.GroundedSAMPredictor(
         text_prompt="arm . cup . keyboard . table . plate . bottle . PC . person",
