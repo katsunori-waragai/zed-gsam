@@ -176,8 +176,11 @@ def main():
                 blend_image = resize_image(blend_image, 0.5)
                 C, H, W = uint_masks.shape[:3]
                 assert C == 1
-                for i, selected in enumerate(points_by_segmentation(points, uint_masks.reshape(H, W))):
-                    print(f"{i=} {pred_phrases[i]=} {selected=}")
+                selected_list = points_by_segmentation(points, uint_masks.reshape(H, W))
+                print(f"{len(pred_phrases)=}")
+                print(f"{len(selected_list)}")
+                for i, selected in enumerate(selected_list):
+                    print(f"{i=} {pred_phrases[i+1]=} {selected=}")
                     print(f"{np.percentile(selected[0], (5, 95))=}")
                     print(f"{np.percentile(selected[1], (5, 95))=}")
                     print(f"{np.percentile(selected[2], (5, 95))=}")
