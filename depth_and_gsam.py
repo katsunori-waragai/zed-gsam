@@ -107,7 +107,7 @@ def points_by_segmentation(points: np.ndarray, segmentation_image: np.ndarray):
 
 
 def main():
-    prompt = "bottle . person"
+    prompt = "bottle . person . box"
     gsam_predictor = gsam_module.GroundedSAMPredictor(
         text_prompt=prompt,
         text_threshold=0.25,
