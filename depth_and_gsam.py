@@ -240,6 +240,8 @@ def main():
                         sc = plt.scatter(x, y, c=z, marker=".", cmap='jet')
 
                 plt.colorbar(sc, label='Z Value')
+                plt.xlabel("x [m]")
+                plt.ylabel("y [m]")
                 plt.grid(True)
                 plt.show()
 
