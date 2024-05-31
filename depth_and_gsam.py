@@ -252,11 +252,11 @@ def main():
                         x = selected[:, 0]
                         y = selected[:, 1]
                         z = -selected[:, 2]
-                        sc = plt.scatter(y, z, c=x, marker=".", cmap='jet')
+                        sc = plt.scatter(z, y, c=x, marker=".", cmap='jet')
 
                 plt.colorbar(sc, label='x Value')
-                plt.xlabel("y [m]")
-                plt.ylabel("z [m]")
+                plt.xlabel("z [m]")
+                plt.ylabel("y [m]")
                 plt.grid(True)
                 plt.show()
 
