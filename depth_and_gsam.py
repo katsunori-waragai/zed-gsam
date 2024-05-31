@@ -130,7 +130,7 @@ def main():
     parse_args(init_params)
 
     init_params.depth_mode = sl.DEPTH_MODE.ULTRA
-    init_params.depth_mode = sl.DEPTH_MODE.NEURAL2
+    # init_params.depth_mode = sl.DEPTH_MODE.NEURAL2
 
     # Open the camera
     err = zed.open(init_params)
