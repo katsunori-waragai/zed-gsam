@@ -199,7 +199,8 @@ def main():
                 print("try matplotlib")
                 plt.figure(figsize=(10, 6))
 
-                plt.subplot(2, 2, 1)
+                ax = plt.subplot(2, 2, 1)
+                ax.set_aspect("equal")
 
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
                     if phrase.find("bottle") > -1:
