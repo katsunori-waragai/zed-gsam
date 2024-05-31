@@ -128,6 +128,7 @@ def main():
 
     parse_args(init_params)
 
+    init_params.depth_mode = sl.DEPTH_MODE.ULTRA
     # Open the camera
     err = zed.open(init_params)
     if err != sl.ERROR_CODE.SUCCESS:
