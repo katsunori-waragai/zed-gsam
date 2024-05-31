@@ -144,6 +144,13 @@ used_time={'dino': 0.512772464, 'sam': 1.059245805, 'save_mask': 0.032677928, 's
 ### segmentation quality
 - 
 
+### depth計測の課題
+- 対象物の輪郭付近でdepthの精度がでない。
+- そのため、その領域のdepthデータを使って点群を評価すると間違えた大きさを返してしまう。
+#### 解決方法案
+- segmentation 後の領域を収縮(Erosion) して領域を狭めてから、点群と紐付ける
+- 
+
 ## todo
 - use stable opencv-python
 
