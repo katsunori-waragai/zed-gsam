@@ -164,6 +164,7 @@ def main():
             zed.retrieve_image(image, sl.VIEW.LEFT)
             zed.retrieve_image(depth_for_display, sl.VIEW.DEPTH)  # near to camera is white
             # Retrieve objects
+            depth_map_img = depth_map.get_data()
             cvimg = image.get_data()
             cv_depth_img = depth_for_display.get_data()
 
