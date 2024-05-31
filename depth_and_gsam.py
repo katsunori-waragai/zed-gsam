@@ -218,7 +218,7 @@ def main():
                 plt.xlabel("x [cm]")
                 plt.xlabel("y [cm]")
                 plt.subplot(1, 2, 2)
-                plot.imshow(colorized)
+                plt.imshow(colorized)
                 plt.show()
                 plt.savefig("plot_bottle.png")
 
