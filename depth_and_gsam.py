@@ -235,7 +235,7 @@ def main():
                 plt.imshow(colorized)
                 plt.show()
                 plt.subplot(2, 2, 4)
-                plt.imshow(depth_map)
+                plt.imshow(depth_map_img)
                 plt.savefig("plot_bottle.png")
 
             if use_hand:
