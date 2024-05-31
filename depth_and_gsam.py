@@ -192,7 +192,7 @@ def main():
                 print(f"{len(selected_list)=}")
                 # assert len(pred_phrases) == len(selected_list)
 
-                import matploltlib.pylab as plt
+                import matplotlib.pylab as plt
                 plt.figure()
 
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
