@@ -63,6 +63,49 @@ def resize_image(image: np.ndarray, rate: float) -> np.ndarray:
     H, W = image.shape[:2]
     return cv2.resize(image, (int(W * rate), int(H * rate)))
 
+def points_by_segmentation(points: np.ndarray, segmentation_image: np.ndarray):
+    """
+    segmentationは結果を元に、対応する点群の範囲を返す。
+    points: height, width, channel の構成
+    pointsは添字の順番がheight, width, channelの順番である。
+    chanelには、X, Y, Z, colorが含まれている。
+    segmentation_imageは、height, width のデータ
+    segmentationの添字はheight, width の順番である。
+    セグメンテーションの分類はuint8 の整数で分類済みである。
+
+    なお、background に対するpointsのデータを返しても有用性が低そうなので、
+    いったんは、除外することとした。
+
+    戻り値は、各セグメンテーションに対応するpointsのsubsetのリストを返す。
+    """
+    # Check the dtype of the inputs
+    assert points.dtype in [np.float32, np.float64], "points must be of type float32 or float64"
+#    assert segmentation_image.dtype in [np.uint8, np.int], "segmentation_image must be of type uint8"
+
+    # Check the shape of the inputs
+    assert points.ndim == 3, "points must be a 3D array (height, width, channels)"
+    assert segmentation_image.ndim == 2, "segmentation_image must be a 2D array (height, width)"
+    assert points.shape[
+           :2] == segmentation_image.shape, "points and segmentation_image must have the same height and width"
+
+    # Get unique segmentation labels
+    unique_labels = np.unique(segmentation_image)
+
+    # Initialize a list to hold points for each segmentation label
+    segmented_points = []
+
+    # Iterate through unique labels and collect corresponding points
+    for label in unique_labels:
+        if label == 0:
+            # 0 は background です。
+            continue
+        mask = segmentation_image == label
+        labeled_points = points[mask]
+        segmented_points.append(labeled_points)
+
+    return segmented_points
+
+
 def main():
     gsam_predictor = gsam_module.GroundedSAMPredictor(
         text_prompt="arm . cup . keyboard . table . plate . bottle . PC . person",
@@ -100,10 +143,12 @@ def main():
     image = sl.Mat()
     depth_map = sl.Mat()
     depth_for_display = sl.Mat()
+    point_cloud = sl.Mat()
 
 
     # Set runtime parameters
     runtime_parameters = predefined.RuntimeParameters()
+    runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.WORLD
     for k, v in inspect.getmembers(runtime_parameters):
         if k.find("__") < 0:
             print(k, v)
@@ -119,17 +164,59 @@ def main():
             # Retrieve objects
             cvimg = image.get_data()
             cv_depth_img = depth_for_display.get_data()
+
+            # 空間座標を得ることが必要。
+            zed.retrieve_measure(point_cloud, sl.MEASURE.XYZRGBA)
+            points = point_cloud.get_data()
+            print(f"{points.shape=}")
+            # points[y, x]で、元画像上の点と対応がつくのかどうか？
             if cvimg is not None:
                 print(f"{cvimg.shape=}")
                 cvimg_bgr = cvimg[:, :, :3].copy()
                 gsam_predictor.infer_all(cvimg_bgr)
                 masks = gsam_predictor.masks
                 colorized = gsam_module.colorize_torch(gsam_module.gen_mask_img(masks)).cpu().numpy()
+                uint_masks = gsam_module.gen_mask_img(masks).cpu().numpy()
+                mask_val = np.unique(uint_masks).astype(np.int16)
+                # mask_val が連続的な整数ではないことが判明した。
+                print(f"{mask_val=}　{len(mask_val)}")
+
                 pred_phrases = gsam_predictor.pred_phrases
                 boxes_filt = gsam_predictor.boxes_filt
                 blend_image = gsam_module.overlay_image(boxes_filt, pred_phrases, cvimg_bgr, colorized)
                 blend_image = resize_image(blend_image, 0.5)
+                C, H, W = uint_masks.shape[:3]
+                assert C == 1
+                selected_list = points_by_segmentation(points, uint_masks.reshape(H, W))
+                print(f"{len(pred_phrases)=}")
+                print(f"{len(selected_list)=}")
+                # assert len(pred_phrases) == len(selected_list)
+
+                import matplotlib.pylab as plt
+                plt.figure()
+
+                for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
+                    if phrase.find("bottle") > -1:
+                        print(f"{i=} {pred_phrases[i]=} {selected=} {phrase=}")
+                        print(f"{selected.shape=}")
+                        print(f"{np.percentile(selected[:, 0], (5, 95))=}")
+                        print(f"{np.percentile(selected[:, 1], (5, 95))=}")
+                        print(f"{np.percentile(selected[:, 2], (5, 95))=}")
+                        x_per = np.percentile(selected[:, 0], (5, 95))
+                        y_per = np.percentile(selected[:, 1], (5, 95))
+                        z_per = np.percentile(selected[:, 2], (5, 95))
+                        print(f"{x_per[1] - x_per[0]=}")
+                        print(f"{y_per[1] - y_per[0]=}")
+                        print(f"{z_per[1] - z_per[0]=}")
+
+                        plt.plot(selected[:, 0], selected[:, 1], ".")
                 cv2.imshow("output", blend_image)
+
+                plt.grid(True)
+                plt.xlabel("x [cm]")
+                plt.xlabel("y [cm]")
+                plt.show()
+                plt.savefig("plot_bottle.png")
 
             if use_hand:
                 detection_result = hand_marker.detect(cvimg)
