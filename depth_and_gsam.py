@@ -212,6 +212,9 @@ def main():
                         plt.plot(selected[:, 0], selected[:, 1])
                 cv2.imshow("output", blend_image)
 
+                plt.grid(True)
+                plt.xlabel("x [cm]")
+                plt.xlabel("y [cm]")
                 plt.show()
                 plt.savefig("plot_bottle.png")
 
