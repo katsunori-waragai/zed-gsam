@@ -130,6 +130,8 @@ def main():
     parse_args(init_params)
 
     init_params.depth_mode = sl.DEPTH_MODE.ULTRA
+    init_params.depth_mode = sl.DEPTH_MODE.NEURAL2
+
     # Open the camera
     err = zed.open(init_params)
     if err != sl.ERROR_CODE.SUCCESS:
@@ -266,7 +268,7 @@ def main():
                 plt.imshow(colorized)
                 plt.show()
                 plt.subplot(2, 2, 4)
-                plt.imshow(np.abs(depth_map_img), vmin=0.0, vmax=1.0, cmap="jet")
+                plt.imshow(np.abs(depth_map_img), vmin=0.0, vmax=2.0, cmap="jet")
                 plt.colorbar()
                 plt.savefig("plot_bottle.png")
                 print(f"saved plot_bottle.png")
