@@ -196,6 +196,7 @@ def main():
                 # assert len(pred_phrases) == len(selected_list)
 
                 import matplotlib.pylab as plt
+                print("try matplotlib")
                 plt.figure(figsize=(10, 6))
 
                 plt.subplot(2, 2, 1)
@@ -216,6 +217,7 @@ def main():
 
                         plt.plot(selected[:, 0], selected[:, 1], ".")
                 cv2.imshow("output", blend_image)
+
 
                 plt.grid(True)
                 plt.xlabel("x [m]")
