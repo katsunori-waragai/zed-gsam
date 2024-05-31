@@ -146,11 +146,8 @@ def main():
     depth_for_display = sl.Mat()
     point_cloud = sl.Mat()
 
-
-    init_params = predefined.InitParameters()
-
     # Set runtime parameters
-    runtime_parameters = predefined.RuntimeParameters(init_params)
+    runtime_parameters = predefined.RuntimeParameters()
     runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.WORLD
     runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.CAMERA
     runtime_parameters.depth_mode = sl.DEPTH_MODE.ULTRA
