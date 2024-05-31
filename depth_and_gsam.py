@@ -208,16 +208,17 @@ def main():
                 # ax = plt.subplot(2, 2, 1)
                 # ax.set_aspect("equal")
 
+                PERCENT_LIMIT = 5
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
                     if phrase.find("bottle") > -1:
                         print(f"{i=} {pred_phrases[i]=} {selected=} {phrase=}")
                         print(f"{selected.shape=}")
-                        print(f"{np.nanpercentile(selected[:, 0], (5, 95))=}")
-                        print(f"{np.nanpercentile(selected[:, 1], (5, 95))=}")
-                        print(f"{np.nanpercentile(selected[:, 2], (5, 95))=}")
-                        x_per = np.nanpercentile(selected[:, 0], (5, 95))
-                        y_per = np.nanpercentile(selected[:, 1], (5, 95))
-                        z_per = np.nanpercentile(selected[:, 2], (5, 95))
+                        x_per = np.nanpercentile(selected[:, 0], (PERCENT_LIMIT, 100 - PERCENT_LIMIT))
+                        y_per = np.nanpercentile(selected[:, 1], (PERCENT_LIMIT, 100 - PERCENT_LIMIT))
+                        z_per = np.nanpercentile(selected[:, 2], (PERCENT_LIMIT, 100 - PERCENT_LIMIT))
+                        print(f"{x_per=}")
+                        print(f"{y_per=}")
+                        print(f"{z_per=}")
                         print(f"{x_per[1] - x_per[0]=}")
                         print(f"{y_per[1] - y_per[0]=}")
                         print(f"{z_per[1] - z_per[0]=}")
