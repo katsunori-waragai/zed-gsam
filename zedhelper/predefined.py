@@ -27,9 +27,9 @@ def InitParameters():
     # init_params.camera_resolution = sl.RESOLUTION.VGA
 
     # init_params.depth_mode = sl.DEPTH_MODE.NEURAL
-    # init_params.depth_mode = sl.DEPTH_MODE.ULTRA
+    init_params.depth_mode = sl.DEPTH_MODE.ULTRA
     # init_params.depth_mode = sl.DEPTH_MODE.QUALITY
-    init_params.depth_mode = sl.DEPTH_MODE.PERFORMANCE
+    # init_params.depth_mode = sl.DEPTH_MODE.PERFORMANCE
 
     init_params.depth_maximum_distance = 50  # [m]
     init_params.depth_minimum_distance = 0.15  # [m] Set the minimum depth perception distance to 15cm
