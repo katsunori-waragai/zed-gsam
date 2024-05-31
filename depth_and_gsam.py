@@ -149,6 +149,7 @@ def main():
     # Set runtime parameters
     runtime_parameters = predefined.RuntimeParameters()
     runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.WORLD
+    runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.CAMERA
     for k, v in inspect.getmembers(runtime_parameters):
         if k.find("__") < 0:
             print(k, v)
@@ -194,6 +195,7 @@ def main():
 
                 import matplotlib.pylab as plt
                 plt.figure()
+                plt.subplot(1, 2, 1)
 
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
                     if phrase.find("bottle") > -1:
@@ -215,6 +217,8 @@ def main():
                 plt.grid(True)
                 plt.xlabel("x [cm]")
                 plt.xlabel("y [cm]")
+                plt.subplot(1, 2, 2)
+                plot.imshow(colorized)
                 plt.show()
                 plt.savefig("plot_bottle.png")
 
