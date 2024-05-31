@@ -209,7 +209,7 @@ def main():
                         print(f"{y_per[1] - y_per[0]=}")
                         print(f"{z_per[1] - z_per[0]=}")
 
-                        plt.plot(selected[:, 0], selected[:, 1])
+                        plt.plot(selected[:, 0], selected[:, 1], ".")
                 cv2.imshow("output", blend_image)
 
                 plt.grid(True)
