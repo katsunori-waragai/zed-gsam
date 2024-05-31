@@ -156,7 +156,7 @@ def main():
     # Set runtime parameters
     runtime_parameters = predefined.RuntimeParameters()
     runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.WORLD
-    runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.CAMERA
+    # runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.CAMERA
     for k, v in inspect.getmembers(runtime_parameters):
         if k.find("__") < 0:
             print(k, v)
