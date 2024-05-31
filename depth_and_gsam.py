@@ -205,8 +205,8 @@ def main():
                 print("try matplotlib")
                 plt.figure(figsize=(10, 6))
 
-                ax = plt.subplot(2, 2, 1)
-                ax.set_aspect("equal")
+                # ax = plt.subplot(2, 2, 1)
+                # ax.set_aspect("equal")
 
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
                     if phrase.find("bottle") > -1:
@@ -222,16 +222,16 @@ def main():
                         print(f"{y_per[1] - y_per[0]=}")
                         print(f"{z_per[1] - z_per[0]=}")
 
-                        plt.plot(selected[:, 0], selected[:, 1], ".")
-                cv2.imshow("output", blend_image)
+                        # plt.plot(selected[:, 0], selected[:, 1], ".")
+                # cv2.imshow("output", blend_image)
 
 
-                plt.grid(True)
-                plt.xlabel("x [m]")
-                plt.ylabel("y [m]")
+                # plt.grid(True)
+                # plt.xlabel("x [m]")
+                # plt.ylabel("y [m]")
 
-                ax2 = plt.subplot(2, 2, 2)
-                ax2.set_aspect("equal")
+                ax1 = plt.subplot(2, 2, 1)
+                ax1.set_aspect("equal")
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
                     if phrase.find("bottle") > -1:
                         x = selected[:, 0]
@@ -242,6 +242,21 @@ def main():
                 plt.colorbar(sc, label='Z Value')
                 plt.xlabel("x [m]")
                 plt.ylabel("y [m]")
+                plt.grid(True)
+                plt.show()
+
+                ax2 = plt.subplot(2, 2, 2)
+                ax2.set_aspect("equal")
+                for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
+                    if phrase.find("bottle") > -1:
+                        x = selected[:, 0]
+                        y = selected[:, 1]
+                        z = -selected[:, 2]
+                        sc = plt.scatter(y, z, c=x, marker=".", cmap='jet')
+
+                plt.colorbar(sc, label='x Value')
+                plt.xlabel("y [m]")
+                plt.ylabel("z [m]")
                 plt.grid(True)
                 plt.show()
 
