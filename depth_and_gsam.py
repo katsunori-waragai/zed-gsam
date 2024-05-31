@@ -222,7 +222,7 @@ def main():
 
                 plt.grid(True)
                 plt.xlabel("x [m]")
-                plt.xlabel("y [m]")
+                plt.ylabel("y [m]")
 
                 ax2 = plt.subplot(2, 2, 2)
                 ax2.set_aspect("equal")
@@ -231,7 +231,7 @@ def main():
                         x = selected[:, 0]
                         y = selected[:, 1]
                         z = -selected[:, 2]
-                        sc = plt.scatter(x, y, c=z, cmap='viridis')
+                        sc = plt.scatter(x, y, c=z, marker=".", cmap='jet')
 
                 plt.colorbar(sc, label='Z Value')
                 plt.grid(True)
