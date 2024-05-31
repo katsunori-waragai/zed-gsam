@@ -210,7 +210,7 @@ def main():
 
                 PERCENT_LIMIT = 5
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
-                    if phrase.find("bottle") > -1:
+                    if phrase.find("box") > -1:
                         print(f"{i=} {pred_phrases[i]=} {selected=} {phrase=}")
                         print(f"{selected.shape=}")
                         x_per = np.nanpercentile(selected[:, 0], (PERCENT_LIMIT, 100 - PERCENT_LIMIT))
