@@ -195,7 +195,7 @@ def main():
 
                 import matplotlib.pylab as plt
                 plt.figure()
-                plt.subplot(1, 2, 1)
+                plt.subplot(2, 2, 1)
 
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
                     if phrase.find("bottle") > -1:
@@ -217,7 +217,19 @@ def main():
                 plt.grid(True)
                 plt.xlabel("x [cm]")
                 plt.xlabel("y [cm]")
-                plt.subplot(1, 2, 2)
+
+                plt.subplot(2, 2, 2)
+                for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
+                    if phrase.find("bottle") > -1:
+                        x = selected[:, 0]
+                        y = selected[:, 1]
+                        z = selected[:, 2]
+                        sc = plt.scatter(x, y, c=z, cmap='viridis')
+
+                plt.colorbar(sc, label='Z Value')
+
+
+                plt.subplot(2, 2, 3)
                 plt.imshow(colorized)
                 plt.show()
                 plt.savefig("plot_bottle.png")
