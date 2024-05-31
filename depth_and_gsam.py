@@ -215,7 +215,7 @@ def main():
                         print(f"{selected.shape=}")
                         x_per = np.nanpercentile(selected[:, 0], (PERCENT_LIMIT, 100 - PERCENT_LIMIT))
                         y_per = np.nanpercentile(selected[:, 1], (PERCENT_LIMIT, 100 - PERCENT_LIMIT))
-                        z_per = np.nanpercentile(selected[:, 2], (PERCENT_LIMIT, 100 - 2 * PERCENT_LIMIT))
+                        z_per = np.nanpercentile(selected[:, 2], (PERCENT_LIMIT, 100 - 3 * PERCENT_LIMIT))
                         print(f"{x_per=}")
                         print(f"{y_per=}")
                         print(f"{z_per=}")
