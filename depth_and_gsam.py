@@ -135,6 +135,9 @@ def main():
         exit(1)
 
     print(f"{init_params=}")
+    for k, v in inspect.getmembers(init_params):
+        if k.find("__") < 0:
+            print(k, v)
     input("hit return key to continue")
 
     # Enable object detection module
