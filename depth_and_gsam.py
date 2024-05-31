@@ -108,6 +108,7 @@ def points_by_segmentation(points: np.ndarray, segmentation_image: np.ndarray):
 
 def main():
     prompt = "bottle . person . box"
+    watching_obj = "box"
     gsam_predictor = gsam_module.GroundedSAMPredictor(
         text_prompt=prompt,
         text_threshold=0.25,
@@ -210,7 +211,7 @@ def main():
 
                 PERCENT_LIMIT = 5
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
-                    if phrase.find("box") > -1:
+                    if phrase.find(watching_obj) > -1:
                         print(f"{i=} {pred_phrases[i]=} {selected=} {phrase=}")
                         print(f"{selected.shape=}")
                         x_per = np.nanpercentile(selected[:, 0], (PERCENT_LIMIT, 100 - PERCENT_LIMIT))
@@ -234,7 +235,7 @@ def main():
                 ax1 = plt.subplot(2, 2, 1)
                 ax1.set_aspect("equal")
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
-                    if phrase.find("box") > -1:
+                    if phrase.find(watching_obj) > -1:
                         x = selected[:, 0]
                         y = selected[:, 1]
                         z = -selected[:, 2]
@@ -249,7 +250,7 @@ def main():
                 ax2 = plt.subplot(2, 2, 2)
                 ax2.set_aspect("equal")
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
-                    if phrase.find("bottle") > -1:
+                    if phrase.find(watching_obj) > -1:
                         x = selected[:, 0]
                         y = selected[:, 1]
                         z = -selected[:, 2]
