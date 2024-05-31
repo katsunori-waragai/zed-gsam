@@ -134,6 +134,9 @@ def main():
         print(err)
         exit(1)
 
+    print(f"{init_params=}")
+    input("hit return key to continue")
+
     # Enable object detection module
     camera_info = zed.get_camera_information()
     # Create OpenGL viewer
