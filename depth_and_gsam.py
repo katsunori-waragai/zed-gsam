@@ -215,8 +215,8 @@ def main():
                 cv2.imshow("output", blend_image)
 
                 plt.grid(True)
-                plt.xlabel("x [cm]")
-                plt.xlabel("y [cm]")
+                plt.xlabel("x [m]")
+                plt.xlabel("y [m]")
 
                 plt.subplot(2, 2, 2)
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
