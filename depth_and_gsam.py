@@ -191,6 +191,10 @@ def main():
                 print(f"{len(pred_phrases)=}")
                 print(f"{len(selected_list)=}")
                 # assert len(pred_phrases) == len(selected_list)
+
+                import matploltlib.pylab as plt
+                plt.figure()
+
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
                     if phrase.find("bottle") > -1:
                         print(f"{i=} {pred_phrases[i]=} {selected=} {phrase=}")
@@ -204,7 +208,12 @@ def main():
                         print(f"{x_per[1] - x_per[0]=}")
                         print(f"{y_per[1] - y_per[0]=}")
                         print(f"{z_per[1] - z_per[0]=}")
+
+                        plt.plot(selected[:, 0], selected[:, 1])
                 cv2.imshow("output", blend_image)
+
+                plt.show()
+                plt.savefig("plot_bottle.png")
 
             if use_hand:
                 detection_result = hand_marker.detect(cvimg)
