@@ -224,15 +224,17 @@ def main():
                 plt.xlabel("x [m]")
                 plt.xlabel("y [m]")
 
-                plt.subplot(2, 2, 2)
+                ax2 = plt.subplot(2, 2, 2)
+                ax2.set_aspect("equal")
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
                     if phrase.find("bottle") > -1:
                         x = selected[:, 0]
                         y = selected[:, 1]
-                        z = selected[:, 2]
+                        z = -selected[:, 2]
                         sc = plt.scatter(x, y, c=z, cmap='viridis')
 
                 plt.colorbar(sc, label='Z Value')
+                plt.grid(True)
                 plt.show()
 
                 plt.subplot(2, 2, 3)
