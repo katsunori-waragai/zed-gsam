@@ -274,6 +274,7 @@ def main():
                 is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
                 print(f"{cv_depth_img.shape=}")
                 print(f"{is_picked.shape=}")
+                print(f"{depth_map_img.shape=} {depth_map_img.dtype=}")
                 # float型で標準化する。遠方ほどマイナスになる座標系なので, np.abs()を利用する
                 normalized_depth = np.clip(np.abs(depth_map_img[:, :, 0]) / (MAX_DEPTH - MIN_DEPTH), 0.0, 1.0)
                 print(f"{normalized_depth.shape=} {normalized_depth.dtype=}")
