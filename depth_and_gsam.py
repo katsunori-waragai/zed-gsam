@@ -16,6 +16,8 @@ import gsam_module
 
 import inspect
 
+MAX_DEPTH = 2.0  # [m]
+MIN_DEPTH = 0.0  # [m]
 
 def parse_args(init):
     if len(opt.input_svo_file) > 0 and opt.input_svo_file.endswith(".svo"):
@@ -273,10 +275,8 @@ def main():
                 is_picked_color = cv2.cvtColor(is_picked, cv2.COLOR_GRAY2RGB)
                 print(f"{cv_depth_img.shape=}")
                 print(f"{is_picked_color.shape=}")
-                # pseudo_color_depth = skimage.color.gray2rgba(cv_depth_img[:, :, 0], alpha=is_picked)
-                # pseudo_color_depth = skimage.color.gray2rgba(cv_depth_img[:, :, 0])
-                pseudo_color_depth = matplotlib.cm.jet(cv_depth_img[:, :, 0])
-                print(f"{pseudo_color_depth.shape=}")
+                normalized_depth = np.abs(depth_map_img[0]) / (MAX_DEPTH - MIN_DEPTH)
+                pseudo_color_depth = matplotlib.cm.jet(normalized_depth)
                 print(f"{pseudo_color_depth.dtype=}")
                 pseudo_color_depth[:, :, 3] = np.array(1.0 * uint_masks.reshape(H, W) > 0, dtype=pseudo_color_depth.dtype)
                 # pseudo_color_depth_rgba = np.hstack((pseudo_color_depth, alpha))
