@@ -276,6 +276,8 @@ def main():
                 pseudo_color_depth = matplotlib.cm.jet(cv_depth_img[:, :, 0])
                 print(f"{pseudo_color_depth.shape=}")
                 print(f"{pseudo_color_depth.dtype=}")
+                pseudo_color_depth_rgba = cv2.cvtColor(pseudo_color_depth, cv2.COLOR_BGR2BGRA)
+                pseudo_color_depth_rgba[:, :, 3] = np.array(1.0 * uint_masks.reshape(H, W) > 0, dtype=pseudo_color_depth_rgba.dtype)
 
                 # plt.imshow(is_picked)
                 plt.imshow(pseudo_color_depth)
