@@ -280,7 +280,7 @@ def main():
                 pseudo_color_depth_rgba[:, :, 3] = np.array(1.0 * uint_masks.reshape(H, W) > 0, dtype=pseudo_color_depth_rgba.dtype)
 
                 # plt.imshow(is_picked)
-                plt.imshow(pseudo_color_depth)
+                plt.imshow(pseudo_color_depth_rgba)
                 plt.show()
 
                 plt.subplot(2, 3, 4)
