@@ -270,7 +270,7 @@ def main():
                 plt.grid(True)
                 plt.show()
 
-                plt.subplot(2, 3, 3)
+                plt.subplot(2, 3, 5)
                 import skimage
                 import matplotlib
                 is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
@@ -300,10 +300,10 @@ def main():
                 plt.subplot(2, 3, 4)
                 plt.imshow(colorized)
                 plt.show()
-                plt.subplot(2, 3, 5)
+                plt.subplot(2, 3, 6)
                 plt.imshow(np.abs(depth_map_img), vmin=0.0, vmax=2.0, cmap="jet")
                 plt.colorbar()
-                plt.subplot(2, 3, 6)
+                plt.subplot(2, 3, 3)
                 # colorized と cv_depth_imgとを重ね書きする。
                 alpha = 0.2
                 blend_image = np.array(alpha * colorized + (1 - alpha) * cvimg[:, :, :3], dtype=np.uint8)
