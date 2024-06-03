@@ -273,6 +273,7 @@ def main():
                 pseudo_color_depth = skimage.color.gray2rgba(cv_depth_img[:, :, 0], alpha=is_picked)
                 print(f"{pseudo_color_depth.shape=}")
                 plt.imshow(pseudo_color_depth)
+                plt.show()
 
                 plt.subplot(2, 3, 4)
                 plt.imshow(colorized)
