@@ -282,16 +282,17 @@ def main():
                 pseudo_color_depth = matplotlib.cm.jet(normalized_depth)
                 print(f"{pseudo_color_depth.dtype=}")
                 alpha = np.array(1.0 * uint_masks.reshape(H, W) > 0, dtype=pseudo_color_depth.dtype)
-                alpha = alpha[:, :, np.newaxis]
+                # alpha = alpha[:, :, np.newaxis]
                 print(f"{pseudo_color_depth.shape=} {pseudo_color_depth.dtype=}")
                 print(f"{alpha.shape=} {alpha.dtype=}")
                 assert len(pseudo_color_depth.shape) == 3
                 assert pseudo_color_depth.shape[2] in (3, 4)
                 # BGRAのデータにする
-                pseudo_color_depth_rgba = np.hstack((pseudo_color_depth[:, :, :2].copy(), alpha))
+                pseudo_color_depth[:, :, 3] = alpha
+                # pseudo_color_depth_rgba = np.hstack((pseudo_color_depth[:, :, :3].copy(), alpha))
 
                 # plt.imshow(is_picked)
-                plt.imshow(pseudo_color_depth_rgba)
+                plt.imshow(pseudo_color_depth)
                 plt.show()
 
                 plt.subplot(2, 3, 4)
