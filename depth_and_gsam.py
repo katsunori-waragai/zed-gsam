@@ -282,7 +282,7 @@ def main():
                 # pseudo_color_depth_rgba = np.hstack((pseudo_color_depth, alpha))
 
                 # plt.imshow(is_picked)
-                plt.imshow(pseudo_color_depth_rgb)
+                plt.imshow(pseudo_color_depth)
                 plt.show()
 
                 plt.subplot(2, 3, 4)
