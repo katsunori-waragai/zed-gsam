@@ -107,8 +107,10 @@ def points_by_segmentation(points: np.ndarray, segmentation_image: np.ndarray):
 
 
 def main():
+    prompt = "bottle . person . box"
+    watching_obj = "box"
     gsam_predictor = gsam_module.GroundedSAMPredictor(
-        text_prompt="arm . cup . keyboard . table . plate . bottle . PC . person",
+        text_prompt=prompt,
         text_threshold=0.25,
         box_threshold=0.3,
         use_sam_hq=False,
@@ -127,11 +129,20 @@ def main():
 
     parse_args(init_params)
 
+    init_params.depth_mode = sl.DEPTH_MODE.ULTRA
+    # init_params.depth_mode = sl.DEPTH_MODE.NEURAL2
+
     # Open the camera
     err = zed.open(init_params)
     if err != sl.ERROR_CODE.SUCCESS:
         print(err)
         exit(1)
+
+    print(f"{init_params=}")
+    for k, v in inspect.getmembers(init_params):
+        if k.find("__") < 0:
+            print(k, v)
+    input("hit return key to continue")
 
     # Enable object detection module
     camera_info = zed.get_camera_information()
@@ -145,10 +156,10 @@ def main():
     depth_for_display = sl.Mat()
     point_cloud = sl.Mat()
 
-
     # Set runtime parameters
     runtime_parameters = predefined.RuntimeParameters()
     runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.WORLD
+    # runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.CAMERA
     for k, v in inspect.getmembers(runtime_parameters):
         if k.find("__") < 0:
             print(k, v)
@@ -162,6 +173,7 @@ def main():
             zed.retrieve_image(image, sl.VIEW.LEFT)
             zed.retrieve_image(depth_for_display, sl.VIEW.DEPTH)  # near to camera is white
             # Retrieve objects
+            depth_map_img = depth_map.get_data()
             cvimg = image.get_data()
             cv_depth_img = depth_for_display.get_data()
 
@@ -193,30 +205,74 @@ def main():
                 # assert len(pred_phrases) == len(selected_list)
 
                 import matplotlib.pylab as plt
-                plt.figure()
+                print("try matplotlib")
+                plt.figure(figsize=(10, 6))
 
+                # ax = plt.subplot(2, 2, 1)
+                # ax.set_aspect("equal")
+
+                PERCENT_LIMIT = 5
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
-                    if phrase.find("bottle") > -1:
+                    if phrase.find(watching_obj) > -1:
                         print(f"{i=} {pred_phrases[i]=} {selected=} {phrase=}")
                         print(f"{selected.shape=}")
-                        print(f"{np.percentile(selected[:, 0], (5, 95))=}")
-                        print(f"{np.percentile(selected[:, 1], (5, 95))=}")
-                        print(f"{np.percentile(selected[:, 2], (5, 95))=}")
-                        x_per = np.percentile(selected[:, 0], (5, 95))
-                        y_per = np.percentile(selected[:, 1], (5, 95))
-                        z_per = np.percentile(selected[:, 2], (5, 95))
+                        x_per = np.nanpercentile(selected[:, 0], (PERCENT_LIMIT, 100 - PERCENT_LIMIT))
+                        y_per = np.nanpercentile(selected[:, 1], (PERCENT_LIMIT, 100 - PERCENT_LIMIT))
+                        z_per = np.nanpercentile(selected[:, 2], (PERCENT_LIMIT, 100 - 3 * PERCENT_LIMIT))
+                        print(f"{x_per=}")
+                        print(f"{y_per=}")
+                        print(f"{z_per=}")
                         print(f"{x_per[1] - x_per[0]=}")
                         print(f"{y_per[1] - y_per[0]=}")
                         print(f"{z_per[1] - z_per[0]=}")
 
-                        plt.plot(selected[:, 0], selected[:, 1], ".")
-                cv2.imshow("output", blend_image)
+                        # plt.plot(selected[:, 0], selected[:, 1], ".")
+                # cv2.imshow("output", blend_image)
 
+
+                # plt.grid(True)
+                # plt.xlabel("x [m]")
+                # plt.ylabel("y [m]")
+
+                ax1 = plt.subplot(2, 2, 1)
+                ax1.set_aspect("equal")
+                for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
+                    if phrase.find(watching_obj) > -1:
+                        x = selected[:, 0]
+                        y = selected[:, 1]
+                        z = -selected[:, 2]
+                        sc = plt.scatter(x, y, c=z, marker=".", cmap='jet')
+
+                plt.colorbar(sc, label='Z Value')
+                plt.xlabel("x [m]")
+                plt.ylabel("y [m]")
                 plt.grid(True)
-                plt.xlabel("x [cm]")
-                plt.xlabel("y [cm]")
                 plt.show()
-                plt.savefig("plot_bottle.png")
+
+                ax2 = plt.subplot(2, 2, 2)
+                ax2.set_aspect("equal")
+                for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
+                    if phrase.find(watching_obj) > -1:
+                        x = selected[:, 0]
+                        y = selected[:, 1]
+                        z = -selected[:, 2]
+                        sc = plt.scatter(z, y, c=x, marker=".", cmap='jet')
+
+                plt.colorbar(sc, label='x Value')
+                plt.xlabel("z [m]")
+                plt.ylabel("y [m]")
+                plt.grid(True)
+                plt.show()
+
+                plt.subplot(2, 2, 3)
+                plt.imshow(colorized)
+                plt.show()
+                plt.subplot(2, 2, 4)
+                plt.imshow(np.abs(depth_map_img), vmin=0.0, vmax=2.0, cmap="jet")
+                plt.colorbar()
+                plots_name = "plot_bottle.png"
+                plt.savefig(plots_name)
+                print(f"saved {plots_name}")
 
             if use_hand:
                 detection_result = hand_marker.detect(cvimg)

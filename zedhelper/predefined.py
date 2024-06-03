@@ -27,9 +27,9 @@ def InitParameters():
     # init_params.camera_resolution = sl.RESOLUTION.VGA
 
     # init_params.depth_mode = sl.DEPTH_MODE.NEURAL
-    # init_params.depth_mode = sl.DEPTH_MODE.ULTRA
+    init_params.depth_mode = sl.DEPTH_MODE.ULTRA
     # init_params.depth_mode = sl.DEPTH_MODE.QUALITY
-    init_params.depth_mode = sl.DEPTH_MODE.PERFORMANCE
+    # init_params.depth_mode = sl.DEPTH_MODE.PERFORMANCE
 
     init_params.depth_maximum_distance = 50  # [m]
     init_params.depth_minimum_distance = 0.15  # [m] Set the minimum depth perception distance to 15cm
@@ -52,7 +52,7 @@ def RuntimeParameters():
     runtime_parameters = sl.RuntimeParameters()
     runtime_parameters.enable_depth = True
     # False にすると欠損値を生じます。
-    runtime_parameters.enable_fill_mode = True
+    runtime_parameters.enable_fill_mode = False
     # 値を100にすると欠損値が少なくなる方向。値を小さくすると、欠損値が増える。
     runtime_parameters.confidence_threshold = 100  # max = 100
     runtime_parameters.texture_confidence_threshold = 100
