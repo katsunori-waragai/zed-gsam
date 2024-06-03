@@ -279,6 +279,8 @@ def main():
                 pseudo_color_depth = matplotlib.cm.jet(normalized_depth)
                 print(f"{pseudo_color_depth.dtype=}")
                 alpha = np.array(1.0 * uint_masks.reshape(H, W) > 0, dtype=pseudo_color_depth.dtype)
+                print(f"{pseudo_color_depth.shape=} {pseudo_color_depth.dtype=}")
+                print(f"{alpha.shape=} {alpha.dtype=}")
                 pseudo_color_depth_rgba = np.hstack((pseudo_color_depth, alpha))
 
                 # plt.imshow(is_picked)
