@@ -273,7 +273,7 @@ def main():
                 plt.subplot(2, 3, 6)
                 # colorized と cv_depth_imgとを重ね書きする。
                 alpha = 0.7
-                blend_image = np.array(alpha * colorized + (1 - alpha) * cvimage, dtype=np.uint8)
+                blend_image = np.array(alpha * colorized + (1 - alpha) * cvimg[:, :, :3], dtype=np.uint8)
                 plt.imshow(blend_image)
                 plots_name = "plot_bottle.png"
                 plt.savefig(plots_name)
