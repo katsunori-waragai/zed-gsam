@@ -142,7 +142,12 @@ used_time={'dino': 0.512772464, 'sam': 1.059245805, 'save_mask': 0.032677928, 's
 ```
 
 ### segmentation quality
-- 
+目視確認するためのplotを追加した。
+1. x-y plot [m]
+2. z-y plot [m]
+3. selected instance segmentation(color)
+4. depth image [m]
+
 
 ### depth計測の課題
 - 対象物の輪郭付近でdepthの精度がでない。

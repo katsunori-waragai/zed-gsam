@@ -270,8 +270,9 @@ def main():
                 plt.subplot(2, 2, 4)
                 plt.imshow(np.abs(depth_map_img), vmin=0.0, vmax=2.0, cmap="jet")
                 plt.colorbar()
-                plt.savefig("plot_bottle.png")
-                print(f"saved plot_bottle.png")
+                plots_name = "plot_bottle.png"
+                plt.savefig(plots_name)
+                print(f"saved {plots_name}")
 
             if use_hand:
                 detection_result = hand_marker.detect(cvimg)
