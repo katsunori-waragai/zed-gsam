@@ -234,7 +234,7 @@ def main():
                 # plt.xlabel("x [m]")
                 # plt.ylabel("y [m]")
 
-                ax1 = plt.subplot(2, 2, 1)
+                ax1 = plt.subplot(2, 3, 1)
                 ax1.set_aspect("equal")
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
                     if phrase.find(watching_obj) > -1:
@@ -249,7 +249,7 @@ def main():
                 plt.grid(True)
                 plt.show()
 
-                ax2 = plt.subplot(2, 2, 2)
+                ax2 = plt.subplot(2, 3, 2)
                 ax2.set_aspect("equal")
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
                     if phrase.find(watching_obj) > -1:
@@ -264,15 +264,20 @@ def main():
                 plt.grid(True)
                 plt.show()
 
-                plt.subplot(2, 2, 3)
+                plt.subplot(2, 3, 4)
                 plt.imshow(colorized)
                 plt.show()
-                plt.subplot(2, 2, 4)
+                plt.subplot(2, 3, 5)
                 plt.imshow(np.abs(depth_map_img), vmin=0.0, vmax=2.0, cmap="jet")
                 plt.colorbar()
+                plt.subplot(2, 3, 6)
+                # colorized と cv_depth_imgとを重ね書きする。
+                blend_image = np.array(alpha * colorized + (1 - alpha) * cvimage, dtype=np.uint8)
+                plt.imshow(blend_image)
                 plots_name = "plot_bottle.png"
                 plt.savefig(plots_name)
                 print(f"saved {plots_name}")
+
 
             if use_hand:
                 detection_result = hand_marker.detect(cvimg)
