@@ -243,7 +243,8 @@ def main():
                         z = -selected[:, 2]
                         sc = plt.scatter(x, y, c=z, marker=".", cmap='jet')
 
-                plt.colorbar(sc, label='Z Value')
+                if phrase.find(watching_obj) > -1:
+                    plt.colorbar(sc, label='Z Value')
                 plt.xlabel("x [m]")
                 plt.ylabel("y [m]")
                 plt.grid(True)
