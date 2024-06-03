@@ -272,15 +272,18 @@ def main():
                 import skimage
                 import matplotlib
                 is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
-                is_picked_color = cv2.cvtColor(is_picked, cv2.COLOR_GRAY2RGB)
                 print(f"{cv_depth_img.shape=}")
-                print(f"{is_picked_color.shape=}")
+                print(f"{is_picked.shape=}")
+                # float型で標準化する。遠方ほどマイナスになる座標系なので, np.abs()を利用する
                 normalized_depth = np.clip(np.abs(depth_map_img[0]) / (MAX_DEPTH - MIN_DEPTH), 0.0, 1.0)
+                # float型からjetの擬似カラーに変更する。
                 pseudo_color_depth = matplotlib.cm.jet(normalized_depth)
+                assert pseudo_color_depth.shape[3] == 3
                 print(f"{pseudo_color_depth.dtype=}")
                 alpha = np.array(1.0 * uint_masks.reshape(H, W) > 0, dtype=pseudo_color_depth.dtype)
                 print(f"{pseudo_color_depth.shape=} {pseudo_color_depth.dtype=}")
                 print(f"{alpha.shape=} {alpha.dtype=}")
+                # BGRAのデータにする
                 pseudo_color_depth_rgba = np.hstack((pseudo_color_depth, alpha))
 
                 # plt.imshow(is_picked)
