@@ -266,7 +266,9 @@ def main():
 
                 plt.subplot(2, 3, 3)
                 import skimage
-                pseudo_color_depth = skimage.color.gray2rgba(cv_depth_img, alpha=uint_masks.reshape(H, W)>0)
+                is_picked = np.array(uint_masks.reshape(H, W) > 0, dtype=np.uint8)
+                is_picked_color = cv2.cvtColor(is_picked, cv2.COLOR_GRAY2RGB)
+                pseudo_color_depth = skimage.color.gray2rgba(cv_depth_img, alpha=is_picked_color)
                 plt.imshow(pseudo_color_depth)
 
                 plt.subplot(2, 3, 4)
