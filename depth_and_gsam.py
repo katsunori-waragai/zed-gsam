@@ -266,7 +266,7 @@ def main():
 
                 plt.subplot(2, 3, 3)
                 import skimage
-                is_picked = np.array(uint_masks.reshape(H, W) > 0, dtype=np.uint8)
+                is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
                 is_picked_color = cv2.cvtColor(is_picked, cv2.COLOR_GRAY2RGB)
                 print(f"{cv_depth_img.shape=}")
                 print(f"{is_picked_color.shape=}")
