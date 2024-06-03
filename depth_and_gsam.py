@@ -285,9 +285,9 @@ def main():
                 print(f"{pseudo_color_depth.shape=} {pseudo_color_depth.dtype=}")
                 print(f"{alpha.shape=} {alpha.dtype=}")
                 assert len(pseudo_color_depth.shape) == 3
-                assert pseudo_color_depth.shape[3] == 3
+                assert pseudo_color_depth.shape[2] in (3, 4)
                 # BGRAのデータにする
-                pseudo_color_depth_rgba = np.hstack((pseudo_color_depth, alpha))
+                pseudo_color_depth_rgba = np.hstack((pseudo_color_depth[:, :, :2], alpha))
 
                 # plt.imshow(is_picked)
                 plt.imshow(pseudo_color_depth_rgba)
