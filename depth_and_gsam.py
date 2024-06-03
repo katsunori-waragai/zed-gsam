@@ -268,6 +268,8 @@ def main():
                 import skimage
                 is_picked = np.array(uint_masks.reshape(H, W) > 0, dtype=np.uint8)
                 is_picked_color = cv2.cvtColor(is_picked, cv2.COLOR_GRAY2RGB)
+                print(f"{cv_depth_img.shape=}")
+                print(f"{is_picked_color.shape=}")
                 pseudo_color_depth = skimage.color.gray2rgba(cv_depth_img, alpha=is_picked_color)
                 plt.imshow(pseudo_color_depth)
 
