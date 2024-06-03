@@ -278,8 +278,8 @@ def main():
                 normalized_depth = np.clip(np.abs(depth_map_img[0]) / (MAX_DEPTH - MIN_DEPTH), 0.0, 1.0)
                 pseudo_color_depth = matplotlib.cm.jet(normalized_depth)
                 print(f"{pseudo_color_depth.dtype=}")
-                pseudo_color_depth[:, :, 3] = np.array(1.0 * uint_masks.reshape(H, W) > 0, dtype=pseudo_color_depth.dtype)
-                # pseudo_color_depth_rgba = np.hstack((pseudo_color_depth, alpha))
+                # pseudo_color_depth[:, :, 3] = np.array(1.0 * uint_masks.reshape(H, W) > 0, dtype=pseudo_color_depth.dtype)
+                pseudo_color_depth_rgba = np.hstack((pseudo_color_depth, alpha))
 
                 # plt.imshow(is_picked)
                 plt.imshow(pseudo_color_depth)
