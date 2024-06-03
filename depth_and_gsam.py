@@ -178,7 +178,7 @@ def main():
             # Retrieve objects
             depth_map_img = depth_map.get_data()
             cvimg = image.get_data()
-            cv_depth_img = depth_for_display.get_data()
+            depth_for_display_cvimg = depth_for_display.get_data()
 
             # 空間座標を得ることが必要。
             zed.retrieve_measure(point_cloud, sl.MEASURE.XYZRGBA)
@@ -268,7 +268,7 @@ def main():
                 import skimage
                 import matplotlib
                 is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
-                print(f"{cv_depth_img.shape=}")
+                print(f"{depth_for_display_cvimg.shape=}")
                 print(f"{is_picked.shape=}")
                 print(f"{depth_map_img.shape=} {depth_map_img.dtype=}")
                 # float型で標準化する。遠方ほどマイナスになる座標系なので, np.abs()を利用する
@@ -294,7 +294,7 @@ def main():
                 plt.imshow(np.abs(depth_map_img), vmin=0.0, vmax=2.0, cmap="jet")
                 plt.colorbar()
                 plt.subplot(2, 3, 3)
-                # colorized と cv_depth_imgとを重ね書きする。
+                # colorized と depth_for_display_cvimgとを重ね書きする。
                 alpha = 0.2
                 blend_image = np.array(alpha * colorized + (1 - alpha) * cvimg[:, :, :3], dtype=np.uint8)
                 plt.imshow(blend_image)
@@ -307,7 +307,7 @@ def main():
                 detection_result = hand_marker.detect(cvimg)
                 annotated_image = hand_marker.draw_landmarks(detection_result)
                 cv2.imshow("annotated_image", resize_image(cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR), 0.5))
-            cv2.imshow("depth_for_display", resize_image(cv_depth_img, 0.5))
+            cv2.imshow("depth_for_display", resize_image(depth_for_display_cvimg, 0.5))
             key = cv2.waitKey(1)
             if key == ord("q"):
                 break
