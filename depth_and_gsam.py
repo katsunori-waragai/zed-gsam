@@ -264,6 +264,11 @@ def main():
                 plt.grid(True)
                 plt.show()
 
+                plt.subplot(2, 3, 3)
+                import skimage
+                pseudo_color_depth = skimage.color.gray2rgba(cv_depth_img, alpha=uint_masks.reshape(H, W)>0)
+                plt.imshow(pseudo_color_depth)
+
                 plt.subplot(2, 3, 4)
                 plt.imshow(colorized)
                 plt.show()
