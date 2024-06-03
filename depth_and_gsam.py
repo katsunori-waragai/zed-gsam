@@ -272,7 +272,7 @@ def main():
                 print(f"{is_picked.shape=}")
                 print(f"{depth_map_img.shape=} {depth_map_img.dtype=}")
                 # float型で標準化する。遠方ほどマイナスになる座標系なので, np.abs()を利用する
-                normalized_depth = np.clip(depth_map_img / (MAX_ABS_DEPTH - MIN_ABS_DEPTH), - 1.0, 0.0)
+                normalized_depth = np.clip(np.abs(depth_map_img) / abs(MAX_ABS_DEPTH - MIN_ABS_DEPTH), 0.0, 1.0)
                 print(f"{normalized_depth.shape=} {normalized_depth.dtype=}")
                 # float型からjetの擬似カラーに変更する。
                 pseudo_color_depth = matplotlib.cm.jet(normalized_depth)
