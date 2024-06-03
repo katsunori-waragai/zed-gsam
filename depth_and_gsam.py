@@ -16,8 +16,7 @@ import gsam_module
 
 import inspect
 
-MAX_DEPTH = 2.0  # [m]
-MIN_DEPTH = 0.0  # [m]
+MAX_ABS_DEPTH, MIN_ABS_DEPTH = 0.0, 2.0  # [m]
 
 def parse_args(init):
     if len(opt.input_svo_file) > 0 and opt.input_svo_file.endswith(".svo"):
@@ -206,14 +205,10 @@ def main():
                 selected_list = points_by_segmentation(points, uint_masks.reshape(H, W))
                 print(f"{len(pred_phrases)=}")
                 print(f"{len(selected_list)=}")
-                # assert len(pred_phrases) == len(selected_list)
 
                 import matplotlib.pylab as plt
                 print("try matplotlib")
                 plt.figure(figsize=(10, 6))
-
-                # ax = plt.subplot(2, 2, 1)
-                # ax.set_aspect("equal")
 
                 PERCENT_LIMIT = 5
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
@@ -233,21 +228,18 @@ def main():
                         # plt.plot(selected[:, 0], selected[:, 1], ".")
                 # cv2.imshow("output", blend_image)
 
-
-                # plt.grid(True)
-                # plt.xlabel("x [m]")
-                # plt.ylabel("y [m]")
-
                 ax1 = plt.subplot(2, 3, 1)
                 ax1.set_aspect("equal")
+                found = False
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
                     if phrase.find(watching_obj) > -1:
                         x = selected[:, 0]
                         y = selected[:, 1]
                         z = -selected[:, 2]
                         sc = plt.scatter(x, y, c=z, marker=".", cmap='jet')
+                        found = True
 
-                if phrase.find(watching_obj) > -1:
+                if found:
                     plt.colorbar(sc, label='Z Value')
                 plt.xlabel("x [m]")
                 plt.ylabel("y [m]")
@@ -256,14 +248,16 @@ def main():
 
                 ax2 = plt.subplot(2, 3, 2)
                 ax2.set_aspect("equal")
+                found = False
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
                     if phrase.find(watching_obj) > -1:
                         x = selected[:, 0]
                         y = selected[:, 1]
                         z = -selected[:, 2]
                         sc = plt.scatter(z, y, c=x, marker=".", cmap='jet')
+                        found = True
 
-                if phrase.find(watching_obj) > -1:
+                if found > -1:
                     plt.colorbar(sc, label='x Value')
                 plt.xlabel("z [m]")
                 plt.ylabel("y [m]")
@@ -278,22 +272,18 @@ def main():
                 print(f"{is_picked.shape=}")
                 print(f"{depth_map_img.shape=} {depth_map_img.dtype=}")
                 # float型で標準化する。遠方ほどマイナスになる座標系なので, np.abs()を利用する
-                normalized_depth = np.clip(np.abs(depth_map_img) / (MAX_DEPTH - MIN_DEPTH), 0.0, 1.0)
+                normalized_depth = np.clip(depth_map_img / (MAX_ABS_DEPTH - MIN_ABS_DEPTH), - 1.0, 0.0)
                 print(f"{normalized_depth.shape=} {normalized_depth.dtype=}")
                 # float型からjetの擬似カラーに変更する。
                 pseudo_color_depth = matplotlib.cm.jet(normalized_depth)
                 print(f"{pseudo_color_depth.dtype=}")
                 alpha = np.array(1.0 * uint_masks.reshape(H, W) > 0, dtype=pseudo_color_depth.dtype)
-                # alpha = alpha[:, :, np.newaxis]
                 print(f"{pseudo_color_depth.shape=} {pseudo_color_depth.dtype=}")
                 print(f"{alpha.shape=} {alpha.dtype=}")
                 assert len(pseudo_color_depth.shape) == 3
                 assert pseudo_color_depth.shape[2] in (3, 4)
                 # BGRAのデータにする
                 pseudo_color_depth[:, :, 3] = alpha
-                # pseudo_color_depth_rgba = np.hstack((pseudo_color_depth[:, :, :3].copy(), alpha))
-
-                # plt.imshow(is_picked)
                 plt.imshow(pseudo_color_depth)
                 plt.show()
 
