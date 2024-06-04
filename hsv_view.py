@@ -2,6 +2,12 @@ import numpy as np
 import cv2
 import skimage
 def gen_hsv_image(gray, masks):
+    """
+    gray scale 画像をBrightness
+    maskの値を Hue
+    に対応付けた画像を返す。
+    ただし、maskの値が０の領域はbackground なので、Saturation=0 にして色を付けない。
+    """
     if len(gray.shape) == 3:
         gray = gray[:, :, 0]
 
