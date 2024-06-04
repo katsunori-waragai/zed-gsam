@@ -303,8 +303,14 @@ def main():
                     import hsv_view
                     masks_cpu = gsam_module.gen_mask_img(masks).cpu().numpy()
                     print(f"{masks_cpu.shape=}")
+                    H_, W_ = masks_cpu.shape[-2:]
+                    masks_cpu = np.reshape(masks_cpu, (H_, W_))
                     hsv_img = hsv_view.gen_hsv_image(depth_for_display_cvimg, masks_cpu)
-                    plt.imshow(cv2.cvtColor(hsv_img, cv2.COLOR_HSV2RGB))
+                    print(f"{hsv_img.shape=} {hsv_img.dtype=}")
+                    bgr = cv2.cvtColor(hsv_img, cv2.COLOR_HSV2RGB)
+                    print(f"{bgr.shape=} {bgr.dtype=}")
+                    skimage.io.imsave("bgr.jpg", bgr)
+                    plt.imshow(bgr)
 
 
                 plt.subplot(2, 3, 2)
