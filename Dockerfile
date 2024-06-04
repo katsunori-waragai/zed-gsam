@@ -5,7 +5,7 @@ ARG USE_CUDA=1
 
 ENV AM_I_DOCKER True
 ENV BUILD_WITH_CUDA "${USE_CUDA}"
-ENV TORCH_CUDA_ARCH_LIST "${TORCH_ARCH}"
+ENV TORCH_CUDA_ARCH_LIST "8.7+PTX"
 ENV CUDA_HOME /usr/local/cuda-11.4/
 RUN cd /root && git clone https://github.com/IDEA-Research/Grounded-Segment-Anything.git
 
