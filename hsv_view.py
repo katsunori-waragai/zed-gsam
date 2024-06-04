@@ -7,6 +7,9 @@ def gen_hsv_image(gray, masks):
     maskの値を Hue
     に対応付けた画像を返す。
     ただし、maskの値が０の領域はbackground なので、Saturation=0 にして色を付けない。
+
+    欠点：元のdepthのグレースケール画像で黒いと、heuでマスクの種類を指定しても、
+    黒は黒いままなので表示には向かない。
     """
     if len(gray.shape) == 3:
         gray = gray[:, :, 0]
