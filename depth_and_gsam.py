@@ -302,10 +302,13 @@ def main():
                 else:
                     import hsv_view
                     masks_cpu = gsam_module.gen_mask_img(masks).cpu().numpy()
-                    print(f"{masks_cpu.shape=}")
+                    print(f"{masks_cpu.shape=} {masks_cpu.dtype=}")
                     H_, W_ = masks_cpu.shape[-2:]
                     masks_cpu = np.reshape(masks_cpu, (H_, W_))
-                    hsv_img = hsv_view.gen_hsv_image(depth_for_display_cvimg, masks_cpu)
+                    depth_for_display_gray = depth_for_display_cvimg[:, :, 0]
+                    print(f"{depth_for_display_gray.shape=} {depth_for_display_gray.dtype=}")
+                    print(f"{masks_cpu.shape=} {masks_cpu.dtype=}")
+                    hsv_img = hsv_view.gen_hsv_image(depth_for_display_gray, masks_cpu)
                     print(f"{hsv_img.shape=} {hsv_img.dtype=}")
                     bgr = cv2.cvtColor(hsv_img, cv2.COLOR_HSV2RGB)
                     print(f"{bgr.shape=} {bgr.dtype=}")
