@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 import skimage
-def gen_hsv_image(gray, masks):
+def gen_hsv_image(gray: np.ndarray, masks: np.ndarray) -> np.ndarray:
     """
     gray scale 画像をBrightness
     maskの値を Hue
