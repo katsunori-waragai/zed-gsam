@@ -296,18 +296,28 @@ def main():
                 plt.subplot(2, 3, 3)
                 # colorized と depth_for_display_cvimgとを重ね書きする。
                 alpha = 0.2
-                blend_image = np.array(alpha * colorized + (1 - alpha) * cvimg[:, :, :3], dtype=np.uint8)
+                blend_image = np.array(alpha * colorized + (1 - alpha) * depth_for_display_cvimg[:, :, :3], dtype=np.uint8)
                 plt.imshow(blend_image)
+
+                plt.subplot(2, 3, 2)
+                import skimage
+                sobel_img = skimage.filters.sobel(cv2.cvtColor(colorized, cv2.COLOR_BGR2GRAY))
+                sobel_img_uint8 = (sobel_img * 255).astype(np.uint8)
+                _, binary_edges = cv2.threshold(sobel_img_uint8, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+                plt.imshow(binary_edges)
+
                 plots_name = "plot_bottle.png"
                 plt.savefig(plots_name)
                 print(f"saved {plots_name}")
-
 
             if use_hand:
                 detection_result = hand_marker.detect(cvimg)
                 annotated_image = hand_marker.draw_landmarks(detection_result)
                 cv2.imshow("annotated_image", resize_image(cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR), 0.5))
             cv2.imshow("depth_for_display", resize_image(depth_for_display_cvimg, 0.5))
+
+            cv2.imshow("edge", binary_edges)
             key = cv2.waitKey(1)
             if key == ord("q"):
                 break
