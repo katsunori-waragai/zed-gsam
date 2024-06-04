@@ -295,9 +295,15 @@ def main():
                 plt.colorbar()
                 plt.subplot(2, 3, 3)
                 # colorized と depth_for_display_cvimgとを重ね書きする。
-                alpha = 0.2
-                blend_image = np.array(alpha * colorized + (1 - alpha) * depth_for_display_cvimg[:, :, :3], dtype=np.uint8)
-                plt.imshow(blend_image)
+                if 0:
+                    alpha = 0.2
+                    blend_image = np.array(alpha * colorized + (1 - alpha) * depth_for_display_cvimg[:, :, :3], dtype=np.uint8)
+                    plt.imshow(blend_image)
+                else:
+                    import hsv_view
+                    hsv_img = hsv_view.gen_hsv_image(depth_for_display_cvimg, masks.cpu().numpy())
+                    plt.imshow(cv2.cvtColor(hsv_img, cv2.COLOR_HSV2RGB))
+
 
                 plt.subplot(2, 3, 2)
                 import skimage
