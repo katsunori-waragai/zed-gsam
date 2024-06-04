@@ -344,7 +344,7 @@ def main():
                 cv2.imshow("annotated_image", resize_image(cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR), 0.5))
             cv2.imshow("depth_for_display", resize_image(depth_for_display_cvimg, 0.5))
 
-            cv2.imshow("edge", binary_edges)
+            # cv2.imshow("edge", binary_edges)
             key = cv2.waitKey(1)
             if key == ord("q"):
                 break
