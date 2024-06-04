@@ -107,7 +107,7 @@ def points_by_segmentation(points: np.ndarray, segmentation_image: np.ndarray):
     return segmented_points
 
 def as_matrix(chw_array):
-    H_, W_ = chw_arrayu.shape[-2:]
+    H_, W_ = chw_array.shape[-2:]
     return np.reshape(chw_array, (H_, W_))
 
 def depth_with_hue_segment(depth_for_display_cvimg: np.ndarray, masks_cpu: np.ndarray) -> np.ndarray:
