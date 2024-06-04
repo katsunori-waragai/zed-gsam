@@ -316,11 +316,12 @@ def main():
                 # colorized と depth_for_display_cvimgとを重ね書きする。
 
                 masks_cpu = gsam_module.gen_mask_img(masks).cpu().numpy()
-                if 0:
+                if 1:
                     alpha = 0.2
                     blend_image = np.array(alpha * colorized + (1 - alpha) * depth_for_display_cvimg[:, :, :3], dtype=np.uint8)
                     plt.imshow(blend_image)
                 else:
+                    # Hueでsegmentationする試み
                     bgr = depth_with_hue_segment(depth_for_display_cvimg, masks_cpu)
                     plt.imshow(bgr)
 
