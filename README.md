@@ -47,8 +47,10 @@ python3 depth-and-sam.py
 `extra_plot = True`
 1. x-y plot [m]
 2. z-y plot [m]
-3. selected instance segmentation(color)
-4. depth image [m]
+3. 元画像とsegmentationとの重ねがき
+4. selected instance segmentation(color)
+5. 選択された対象物でのdepthの表示(対象物以外は非表示)
+6. depth image [m]
 
 - extra_plot = True 時の動作が遅い。
 - そのため、その他のcv2.imshow()でのハンドの描写、depth自体の表示がされないことがある。
