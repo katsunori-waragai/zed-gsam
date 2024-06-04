@@ -42,17 +42,42 @@ python3 depth-and-sam.py
 - mediapipe でのhand-landmark の表示
 - zed sdkによるdepth画像のグレースケールでの表示
 
+### segmentation quality
+目視確認するためのplotを追加した。
+`extra_plot = True`
+1. x-y plot [m]
+2. z-y plot [m]
+3. selected instance segmentation(color)
+4. depth image [m]
+
+- extra_plot = True 時の動作が遅い。
+- そのため、その他のcv2.imshow()でのハンドの描写、depth自体の表示がされないことがある。
+
+### depth計測の課題
+- 対象物の輪郭付近でdepthの精度がでない。
+- そのため、その領域のdepthデータを使って点群を評価すると間違えた大きさを返してしまう。
+- 例：　ペットボトルの黒いキャップや、ペットボトルの輪郭の近くでさえ、奥行きの外れ値を生じている。
+- enable_fill_mode = Falseであっても、confidence_threshold = 100と高いのが効いている可能性が高い。
+
+```
+    runtime_parameters.enable_fill_mode = False
+# 値を100にすると欠損値が少なくなる方向。値を小さくすると、欠損値が増える。
+    runtime_parameters.confidence_threshold = 100  # max = 100
+```
+#### 解決方法案
+- segmentation 後の領域を収縮(Erosion) して領域を狭めてから、点群と紐付ける
+
+
 ### 追加したい機能
-- セグメンテーションに対応するdepth領域の算出
+- [x] セグメンテーションに対応するdepth領域の算出
 - 改変例：
   - bottle の領域ごとに、対応する単連結領域をdepth 画像から点群のうちの対応する領域を見つけられること。
   - 対象物についてロバストに位置を算出できること。
   - ボトルならば、最近接点・左右端の位置が出ること。
   - ボトルの場合ならば、見えていない背面側の位置も算出できること。
+- [x] グレースケールから擬似カラー表示への変換
 - その領域に対する空間情報への換算
 - 把持すべき場所の算出・アフォーダンス
-### 改善したいポイント
-- グレースケールから擬似カラー表示への変換
 
 ### test_cap_and_demo.sh
 USBカメラから画像を取得・保存して、その画像に対して、grounded-SAMのdemo相当の処理を行う。
@@ -141,20 +166,6 @@ used_time={'dino': 0.512772464, 'sam': 1.059245805, 'save_mask': 0.032677928, 's
 
 ```
 
-### segmentation quality
-目視確認するためのplotを追加した。
-1. x-y plot [m]
-2. z-y plot [m]
-3. selected instance segmentation(color)
-4. depth image [m]
-
-
-### depth計測の課題
-- 対象物の輪郭付近でdepthの精度がでない。
-- そのため、その領域のdepthデータを使って点群を評価すると間違えた大きさを返してしまう。
-#### 解決方法案
-- segmentation 後の領域を収縮(Erosion) して領域を狭めてから、点群と紐付ける
-- 
 
 ## todo
 - use stable opencv-python

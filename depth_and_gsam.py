@@ -143,8 +143,8 @@ def main():
     # Create a Camera object
     zed = sl.Camera()
 
-    use_hand = True
-    extra_plot = False
+    use_hand = True  # mediapipe hand detection
+    extra_plot = True  # segmentation 結果とdepth関連の解析のためのmatplotlibでの表示
 
     if use_hand:
         hand_marker = zedhelper.handmark.HandMarker()
