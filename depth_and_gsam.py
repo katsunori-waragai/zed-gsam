@@ -301,7 +301,9 @@ def main():
                     plt.imshow(blend_image)
                 else:
                     import hsv_view
-                    hsv_img = hsv_view.gen_hsv_image(depth_for_display_cvimg, masks.cpu().numpy())
+                    masks_cpu = gsam_module.gen_mask_img(masks).cpu().numpy()
+                    print(f"{masks_cpu.shape=}")
+                    hsv_img = hsv_view.gen_hsv_image(depth_for_display_cvimg, masks_cpu)
                     plt.imshow(cv2.cvtColor(hsv_img, cv2.COLOR_HSV2RGB))
 
 
