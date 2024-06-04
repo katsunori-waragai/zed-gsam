@@ -329,13 +329,13 @@ def main():
                         plt.imshow(bgr)
 
 
-                    plt.subplot(2, 3, 2)
-                    import skimage
-                    sobel_img = skimage.filters.sobel(masks_cpu)
-                    sobel_img_uint8 = (sobel_img * 255).astype(np.uint8)
-                    _, binary_edges = cv2.threshold(sobel_img_uint8, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-
-                    plt.imshow(binary_edges)
+                    # plt.subplot(2, 3, 2)
+                    # import skimage
+                    # sobel_img = skimage.filters.sobel(masks_cpu)
+                    # sobel_img_uint8 = (sobel_img * 255).astype(np.uint8)
+                    # _, binary_edges = cv2.threshold(sobel_img_uint8, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                    #
+                    # plt.imshow(binary_edges)
 
                     plots_name = "plot_bottle.png"
                     plt.savefig(plots_name)
