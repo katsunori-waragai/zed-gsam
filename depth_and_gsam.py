@@ -9,6 +9,9 @@ import argparse
 import cv2
 import numpy as np
 
+import skimage
+import matplotlib
+
 import zedhelper.handmark
 from zedhelper import predefined
 
@@ -283,8 +286,6 @@ def main():
                 plt.show()
 
                 plt.subplot(2, 3, 5)
-                import skimage
-                import matplotlib
                 is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
                 print(f"{depth_for_display_cvimg.shape=}")
                 print(f"{is_picked.shape=}")
