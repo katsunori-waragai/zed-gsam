@@ -106,10 +106,15 @@ def points_by_segmentation(points: np.ndarray, segmentation_image: np.ndarray):
 
     return segmented_points
 
+def as_matrix(chw_array):
+    H_, W_ = chw_arrayu.shape[-2:]
+    return np.reshape(chw_array, (H_, W_))
+
 def depth_with_hue_segment(depth_for_display_cvimg: np.ndarray, masks_cpu: np.ndarray) -> np.ndarray:
+    import hsv_view
+
     print(f"{masks_cpu.shape=} {masks_cpu.dtype=}")
-    H_, W_ = masks_cpu.shape[-2:]
-    masks_cpu = np.reshape(masks_cpu, (H_, W_))
+    masks_cpu = as_matrix(masks_cpu)
     depth_for_display_gray = depth_for_display_cvimg[:, :, 0]
     print(f"{depth_for_display_gray.shape=} {depth_for_display_gray.dtype=}")
     print(f"{masks_cpu.shape=} {masks_cpu.dtype=}")
@@ -308,20 +313,20 @@ def main():
                 plt.colorbar()
                 plt.subplot(2, 3, 3)
                 # colorized と depth_for_display_cvimgとを重ね書きする。
+
+                masks_cpu = gsam_module.gen_mask_img(masks).cpu().numpy()
                 if 0:
                     alpha = 0.2
                     blend_image = np.array(alpha * colorized + (1 - alpha) * depth_for_display_cvimg[:, :, :3], dtype=np.uint8)
                     plt.imshow(blend_image)
                 else:
-                    import hsv_view
-                    masks_cpu = gsam_module.gen_mask_img(masks).cpu().numpy()
                     bgr = depth_with_hue_segment(depth_for_display_cvimg, masks_cpu)
                     plt.imshow(bgr)
 
 
                 plt.subplot(2, 3, 2)
                 import skimage
-                sobel_img = skimage.filters.sobel(cv2.cvtColor(colorized, cv2.COLOR_BGR2GRAY))
+                sobel_img = skimage.filters.sobel(masks_cpu)
                 sobel_img_uint8 = (sobel_img * 255).astype(np.uint8)
                 _, binary_edges = cv2.threshold(sobel_img_uint8, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
