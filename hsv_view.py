@@ -2,6 +2,9 @@ import numpy as np
 import cv2
 import skimage
 def gen_hsv_image(gray, masks):
+    if len(gray.shape) == 3:
+        gray = gray[:, :, 0]
+
     mask_vals = np.unique(masks)
     maxv = max(mask_vals)
     print(f"{maxv=}")
