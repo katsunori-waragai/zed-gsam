@@ -144,6 +144,7 @@ def main():
     zed = sl.Camera()
 
     use_hand = True
+    extra_plot = False
 
     if use_hand:
         hand_marker = zedhelper.handmark.HandMarker()
@@ -227,9 +228,10 @@ def main():
                 print(f"{len(pred_phrases)=}")
                 print(f"{len(selected_list)=}")
 
-                import matplotlib.pylab as plt
-                print("try matplotlib")
-                plt.figure(figsize=(10, 6))
+                if extra_plot:
+                    import matplotlib.pylab as plt
+                    print("try matplotlib")
+                    plt.figure(figsize=(10, 6))
 
                 PERCENT_LIMIT = 5
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
@@ -249,94 +251,95 @@ def main():
                         # plt.plot(selected[:, 0], selected[:, 1], ".")
                 # cv2.imshow("output", blend_image)
 
-                ax1 = plt.subplot(2, 3, 1)
-                ax1.set_aspect("equal")
-                found = False
-                for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
-                    if phrase.find(watching_obj) > -1:
-                        x = selected[:, 0]
-                        y = selected[:, 1]
-                        z = -selected[:, 2]
-                        sc = plt.scatter(x, y, c=z, marker=".", cmap='jet')
-                        found = True
+                if extra_plot:
+                    ax1 = plt.subplot(2, 3, 1)
+                    ax1.set_aspect("equal")
+                    found = False
+                    for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
+                        if phrase.find(watching_obj) > -1:
+                            x = selected[:, 0]
+                            y = selected[:, 1]
+                            z = -selected[:, 2]
+                            sc = plt.scatter(x, y, c=z, marker=".", cmap='jet')
+                            found = True
 
-                if found:
-                    plt.colorbar(sc, label='Z Value')
-                plt.xlabel("x [m]")
-                plt.ylabel("y [m]")
-                plt.grid(True)
-                plt.show()
+                    if found:
+                        plt.colorbar(sc, label='Z Value')
+                    plt.xlabel("x [m]")
+                    plt.ylabel("y [m]")
+                    plt.grid(True)
+                    plt.show()
 
-                ax2 = plt.subplot(2, 3, 2)
-                ax2.set_aspect("equal")
-                found = False
-                for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
-                    if phrase.find(watching_obj) > -1:
-                        x = selected[:, 0]
-                        y = selected[:, 1]
-                        z = -selected[:, 2]
-                        sc = plt.scatter(z, y, c=x, marker=".", cmap='jet')
-                        found = True
+                    ax2 = plt.subplot(2, 3, 2)
+                    ax2.set_aspect("equal")
+                    found = False
+                    for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
+                        if phrase.find(watching_obj) > -1:
+                            x = selected[:, 0]
+                            y = selected[:, 1]
+                            z = -selected[:, 2]
+                            sc = plt.scatter(z, y, c=x, marker=".", cmap='jet')
+                            found = True
 
-                if found > -1:
-                    plt.colorbar(sc, label='x Value')
-                plt.xlabel("z [m]")
-                plt.ylabel("y [m]")
-                plt.grid(True)
-                plt.show()
+                    if found > -1:
+                        plt.colorbar(sc, label='x Value')
+                    plt.xlabel("z [m]")
+                    plt.ylabel("y [m]")
+                    plt.grid(True)
+                    plt.show()
 
-                plt.subplot(2, 3, 5)
-                is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
-                print(f"{depth_for_display_cvimg.shape=}")
-                print(f"{is_picked.shape=}")
-                print(f"{depth_map_img.shape=} {depth_map_img.dtype=}")
-                # float型で標準化する。遠方ほどマイナスになる座標系なので, np.abs()を利用する
-                normalized_depth = np.clip(np.abs(depth_map_img) / abs(MAX_ABS_DEPTH - MIN_ABS_DEPTH), 0.0, 1.0)
-                print(f"{normalized_depth.shape=} {normalized_depth.dtype=}")
-                # float型からjetの擬似カラーに変更する。
-                pseudo_color_depth = matplotlib.cm.jet(normalized_depth)
-                print(f"{pseudo_color_depth.dtype=}")
-                alpha = np.array(1.0 * uint_masks.reshape(H, W) > 0, dtype=pseudo_color_depth.dtype)
-                print(f"{pseudo_color_depth.shape=} {pseudo_color_depth.dtype=}")
-                print(f"{alpha.shape=} {alpha.dtype=}")
-                assert len(pseudo_color_depth.shape) == 3
-                assert pseudo_color_depth.shape[2] in (3, 4)
-                # BGRAのデータにする
-                pseudo_color_depth[:, :, 3] = alpha
-                plt.imshow(pseudo_color_depth)
-                plt.show()
+                    plt.subplot(2, 3, 5)
+                    is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
+                    print(f"{depth_for_display_cvimg.shape=}")
+                    print(f"{is_picked.shape=}")
+                    print(f"{depth_map_img.shape=} {depth_map_img.dtype=}")
+                    # float型で標準化する。遠方ほどマイナスになる座標系なので, np.abs()を利用する
+                    normalized_depth = np.clip(np.abs(depth_map_img) / abs(MAX_ABS_DEPTH - MIN_ABS_DEPTH), 0.0, 1.0)
+                    print(f"{normalized_depth.shape=} {normalized_depth.dtype=}")
+                    # float型からjetの擬似カラーに変更する。
+                    pseudo_color_depth = matplotlib.cm.jet(normalized_depth)
+                    print(f"{pseudo_color_depth.dtype=}")
+                    alpha = np.array(1.0 * uint_masks.reshape(H, W) > 0, dtype=pseudo_color_depth.dtype)
+                    print(f"{pseudo_color_depth.shape=} {pseudo_color_depth.dtype=}")
+                    print(f"{alpha.shape=} {alpha.dtype=}")
+                    assert len(pseudo_color_depth.shape) == 3
+                    assert pseudo_color_depth.shape[2] in (3, 4)
+                    # BGRAのデータにする
+                    pseudo_color_depth[:, :, 3] = alpha
+                    plt.imshow(pseudo_color_depth)
+                    plt.show()
 
-                plt.subplot(2, 3, 4)
-                plt.imshow(colorized)
-                plt.show()
-                plt.subplot(2, 3, 6)
-                plt.imshow(np.abs(depth_map_img), vmin=0.0, vmax=2.0, cmap="jet")
-                plt.colorbar()
-                plt.subplot(2, 3, 3)
-                # colorized と depth_for_display_cvimgとを重ね書きする。
+                    plt.subplot(2, 3, 4)
+                    plt.imshow(colorized)
+                    plt.show()
+                    plt.subplot(2, 3, 6)
+                    plt.imshow(np.abs(depth_map_img), vmin=0.0, vmax=2.0, cmap="jet")
+                    plt.colorbar()
+                    plt.subplot(2, 3, 3)
+                    # colorized と depth_for_display_cvimgとを重ね書きする。
 
-                masks_cpu = gsam_module.gen_mask_img(masks).cpu().numpy()
-                if 1:
-                    alpha = 0.2
-                    blend_image = np.array(alpha * colorized + (1 - alpha) * depth_for_display_cvimg[:, :, :3], dtype=np.uint8)
-                    plt.imshow(blend_image)
-                else:
-                    # Hueでsegmentationする試み
-                    bgr = depth_with_hue_segment(depth_for_display_cvimg, masks_cpu)
-                    plt.imshow(bgr)
+                    masks_cpu = gsam_module.gen_mask_img(masks).cpu().numpy()
+                    if 1:
+                        alpha = 0.2
+                        blend_image = np.array(alpha * colorized + (1 - alpha) * depth_for_display_cvimg[:, :, :3], dtype=np.uint8)
+                        plt.imshow(blend_image)
+                    else:
+                        # Hueでsegmentationする試み
+                        bgr = depth_with_hue_segment(depth_for_display_cvimg, masks_cpu)
+                        plt.imshow(bgr)
 
 
-                plt.subplot(2, 3, 2)
-                import skimage
-                sobel_img = skimage.filters.sobel(masks_cpu)
-                sobel_img_uint8 = (sobel_img * 255).astype(np.uint8)
-                _, binary_edges = cv2.threshold(sobel_img_uint8, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                    plt.subplot(2, 3, 2)
+                    import skimage
+                    sobel_img = skimage.filters.sobel(masks_cpu)
+                    sobel_img_uint8 = (sobel_img * 255).astype(np.uint8)
+                    _, binary_edges = cv2.threshold(sobel_img_uint8, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-                plt.imshow(binary_edges)
+                    plt.imshow(binary_edges)
 
-                plots_name = "plot_bottle.png"
-                plt.savefig(plots_name)
-                print(f"saved {plots_name}")
+                    plots_name = "plot_bottle.png"
+                    plt.savefig(plots_name)
+                    print(f"saved {plots_name}")
 
             if use_hand:
                 detection_result = hand_marker.detect(cvimg)
