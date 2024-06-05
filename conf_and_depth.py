@@ -6,8 +6,20 @@ runtime_parameters.confidence_threshold = 0 ~ 100 の数値
 runtime_parameters.texture_confidence_threshold = 数値 100
 runtime_parameters.remove_saturated_areas = True
 
+今回は、以下の値を固定値とした。
+init_params.enable_right_side_measure = True
+
 結論：
--
+- depth_map data にはNaN,　posinfが含まれる。(neginf　は未確認）
+- 以下の方法によるpoints_color もNaN,　posinfが含まれる。(neginf　は未確認）
+```
+zed.retrieve_measure(point_cloud, sl.MEASURE.XYZRGBA)
+points = point_cloud.get_data()
+points_color = points[:, :, 3]　
+```
+
+confidence_thresholdを下げるにつれて、
+depth_map data, points_color とも欠損値がisnan が増えていく。
 """
 
 import argparse

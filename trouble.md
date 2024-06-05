@@ -57,3 +57,25 @@
   - zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH); depth_map_img = depth_map.get_data() のデータを確認すること。
   - こちらはshapeが（H,W)のデータ、値にNaNを含まない。(要確認)
 - [] runtime_parameters.confidence_threshold を depth_and_gsam.py のコマンド引数で書き換えられるようにした。
+
+## conf_and_depth.py
+
+疑問：
+depth_map と pointsのcolor でisnanの比率が異なるのが原因不明である。
+```commandline
+runtime_parameters.confidence_threshold=100
+runtime_parameters.enable_fill_mode=True
+depth_map_data.shape=(1242, 2208) depth_map_data.dtype=dtype('float32') %
+count_isfinite=2742130 99.992 %
+count_isnan=0 0.000 %
+count_isneginf=0 0.000 %
+count_isposinf=206 0.008 %
+
+points.shape=(1242, 2208, 4)
+
+count_isfinite_points=1923783  70.151 %
+count_isnan_points=818553  29.849 %
+count_isneginf_points=0  0.000 %
+count_isposinf_points=0  0.000 %
+```
+
