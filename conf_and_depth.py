@@ -99,7 +99,7 @@ def main(opt):
             print(k, v)
 
     fill_modes = [True, False]
-    while mode in fill_modes:
+    for mode in fill_modes:
         runtime_parameters.enable_fill_mode = mode
         if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
             zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH)  # Retrieve depth
