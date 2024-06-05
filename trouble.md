@@ -62,20 +62,28 @@
 
 疑問：
 depth_map と pointsのcolor でisnanの比率が異なるのが原因不明である。
+なお、depth_map と points_zとはisnanの比率が同等レベルである。
+
 ```commandline
 runtime_parameters.confidence_threshold=100
 runtime_parameters.enable_fill_mode=True
 depth_map_data.shape=(1242, 2208) depth_map_data.dtype=dtype('float32') %
-count_isfinite=2742130 99.992 %
+count_isfinite=2737038 99.807 %
 count_isnan=0 0.000 %
 count_isneginf=0 0.000 %
-count_isposinf=206 0.008 %
+count_isposinf=5298 0.193 %
 
 points.shape=(1242, 2208, 4)
 
-count_isfinite_points=1923783  70.151 %
-count_isnan_points=818553  29.849 %
+count_isfinite_points=2013112  73.409 %
+count_isnan_points=729224  26.591 %
 count_isneginf_points=0  0.000 %
 count_isposinf_points=0  0.000 %
+
+
+count_isfinite_points_z=2737038  99.807 %
+count_isnan_points_z=5298  0.193 %
+count_isneginf_points_z=0  0.000 %
+count_isposinf_points_z=0  0.000 %
 ```
 
