@@ -102,10 +102,15 @@ def main(opt):
     for mode in fill_modes:
         print("##################")
         runtime_parameters.enable_fill_mode = mode
+        for _ in range(10):
+            zed.grab(runtime_parameters)
+
         if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
             zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH)  # Retrieve depth
             depth_map_img = depth_map.get_data()
-            print(f"""{runtime_parameters.enable_fill_mode=}
+            print(f"""
+{runtime_parameters.confidence_threshold=}
+{runtime_parameters.enable_fill_mode=}
 {depth_map_img.shape=} {depth_map_img.dtype=}
 {all_isfinite(depth_map_img)=}
 {any_isnan(depth_map_img)=}
