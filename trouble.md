@@ -54,5 +54,6 @@
 - [] 欠損値のある場合のdepth の表示を改善したい。
 - [] zed.retrieve_image(depth_for_display, sl.VIEW.DEPTH); depth_for_display_cvimg = depth_for_display.get_data() で取得すると、欠損値が０になる。
   - 欠損値であることがわかりにくい。
-  - zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH); depth_map_img = depth_map.get_data() の
+  - zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH); depth_map_img = depth_map.get_data() のデータを確認すること。
+  - こちらはshapeが（H,W)のデータ、値にNaNを含まない。(要確認)
 - [] runtime_parameters.confidence_threshold を depth_and_gsam.py のコマンド引数で書き換えられるようにした。
