@@ -159,6 +159,17 @@ def main(opt):
 {count_isneginf_points=} {100 * count_isneginf_points / (W * H): .3f} %
 {count_isposinf_points=} {100 * count_isposinf_points / (W * H): .3f} %
 """)
+                points_z = points[:, :, 2]
+                count_isfinite_points_z = np.count_nonzero(np.isfinite(points_z))
+                count_isnan_points_z = np.count_nonzero(np.isnan(points_z))
+                count_isneginf_points_z = np.count_nonzero(np.isneginf(points_z))
+                count_isposinf_points_z = np.count_nonzero(np.isposinf(points_z))
+                print(f"""
+{count_isfinite_points_z=} {100 * count_isfinite_points_z / (W * H): .3f} %
+{count_isnan_points_z=} {100 * count_isnan_points_z / (W * H): .3f} %
+{count_isneginf_points_z=} {100 * count_isneginf_points_z / (W * H): .3f} %
+{count_isposinf_points_z=} {100 * count_isposinf_points_z / (W * H): .3f} %
+""")
     zed.close()
 
 
