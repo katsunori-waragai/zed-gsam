@@ -1,17 +1,23 @@
 """
-depth画像を見るサンプルスクリプト
+depthデータでのNaN, neginf, posinf の出力について確認する。
+欠損値に影響するのは、以下のパラメータ
+runtime_parameters.enable_fill_mode = True or False
+runtime_parameters.confidence_threshold = 0 ~ 100 の数値
+runtime_parameters.texture_confidence_threshold = 数値 100
+runtime_parameters.remove_saturated_areas = True
 
+結論：
+-
 """
 
-import pyzed.sl as sl
 import argparse
+import inspect
 
 import cv2
 import numpy as np
+import pyzed.sl as sl
 
 from zedhelper import predefined
-
-import inspect
 
 def parse_args(init):
     if len(opt.input_svo_file) > 0 and opt.input_svo_file.endswith(".svo"):
@@ -93,7 +99,6 @@ def main(opt):
     runtime_parameters = predefined.RuntimeParameters()
     runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.WORLD
     runtime_parameters.remove_saturated_areas = True
-    # runtime_parameters.confidence_threshold = opt.confidence_threshold
     print(f"### {runtime_parameters.confidence_threshold=}")
     for k, v in inspect.getmembers(runtime_parameters):
         if k.find("__") < 0:
@@ -107,19 +112,20 @@ def main(opt):
             runtime_parameters.confidence_threshold = conf
             for _ in range(10):
                 zed.grab(runtime_parameters)
+                zed.grab(runtime_parameters)
 
             if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
                 zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH)  # Retrieve depth
-                depth_map_img = depth_map.get_data()
-                H, W = depth_map_img.shape[:2]
-                count_isfinite = np.count_nonzero(np.isfinite(depth_map_img))
-                count_isnan = np.count_nonzero(np.isnan(depth_map_img))
-                count_isneginf = np.count_nonzero(np.isneginf(depth_map_img))
-                count_isposinf = np.count_nonzero(np.isposinf(depth_map_img))
+                depth_map_data = depth_map.get_data()
+                H, W = depth_map_data.shape[:2]
+                count_isfinite = np.count_nonzero(np.isfinite(depth_map_data))
+                count_isnan = np.count_nonzero(np.isnan(depth_map_data))
+                count_isneginf = np.count_nonzero(np.isneginf(depth_map_data))
+                count_isposinf = np.count_nonzero(np.isposinf(depth_map_data))
                 print(f"""
 {runtime_parameters.confidence_threshold=}
 {runtime_parameters.enable_fill_mode=}
-{depth_map_img.shape=} {depth_map_img.dtype=} %
+{depth_map_data.shape=} {depth_map_data.dtype=} %
 {count_isfinite=} {100 * count_isfinite / (W * H):.3f} %
 {count_isnan=} {100 * count_isnan / (W * H):.3f} %
 {count_isneginf=} {100 * count_isneginf / (W * H):.3f} %
@@ -129,6 +135,18 @@ def main(opt):
                 zed.retrieve_measure(point_cloud, sl.MEASURE.XYZRGBA)
                 points = point_cloud.get_data()
                 print(f"{points.shape=}")
+                assert depth_map_data.shape == points.shape[:2]
+                points_color = points[:, :, 3]
+                count_isfinite_points = np.count_nonzero(np.isfinite(points_color))
+                count_isnan_points = np.count_nonzero(np.isnan(points_color))
+                count_isneginf_points = np.count_nonzero(np.isneginf(points_color))
+                count_isposinf_points = np.count_nonzero(np.isposinf(points_color))
+                print(f"""
+{count_isfinite_points=} {100 * count_isfinite_points / (W * H): .3f} %
+{count_isnan_points=} {100 * count_isnan_points / (W * H): .3f} %
+{count_isneginf_points=} {100 * count_isneginf_points / (W * H): .3f} %
+{count_isposinf_points=} {100 * count_isposinf_points / (W * H): .3f} %
+""")
     zed.close()
 
 
@@ -151,12 +169,6 @@ if __name__ == "__main__":
         type=str,
         help="Resolution, can be either HD2K, HD1200, HD1080, HD720, SVGA or VGA",
         default="",
-    )
-    parser.add_argument(
-        "--confidence_threshold",
-        type=float,
-        help="depth confidence_threshold(0 ~ 100)",
-        default=100,
     )
     opt = parser.parse_args()
     if len(opt.input_svo_file) > 0 and len(opt.ip_address) > 0:
