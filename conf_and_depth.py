@@ -92,7 +92,8 @@ def main(opt):
 
     runtime_parameters = predefined.RuntimeParameters()
     runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.WORLD
-    runtime_parameters.confidence_threshold = opt.confidence_threshold
+    runtime_parameters.remove_saturated_areas = True
+    # runtime_parameters.confidence_threshold = opt.confidence_threshold
     print(f"### {runtime_parameters.confidence_threshold=}")
     for k, v in inspect.getmembers(runtime_parameters):
         if k.find("__") < 0:
@@ -100,27 +101,34 @@ def main(opt):
 
     fill_modes = [True, False]
     for mode in fill_modes:
-        print("##################")
-        runtime_parameters.enable_fill_mode = mode
-        for _ in range(10):
-            zed.grab(runtime_parameters)
+        for conf in [50, 60, 70, 80, 90, 100]:
+            print("##################")
+            runtime_parameters.enable_fill_mode = mode
+            runtime_parameters.confidence_threshold = conf
+            for _ in range(10):
+                zed.grab(runtime_parameters)
 
-        if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
-            zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH)  # Retrieve depth
-            depth_map_img = depth_map.get_data()
-            print(f"""
+            if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
+                zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH)  # Retrieve depth
+                depth_map_img = depth_map.get_data()
+                H, W = depth_map_img.shape[:2]
+                count_isfinite = np.count_nonzero(np.isfinite(depth_map_img))
+                count_isnan = np.count_nonzero(np.isnan(depth_map_img))
+                count_isneginf = np.count_nonzero(np.isneginf(depth_map_img))
+                count_isposinf = np.count_nonzero(np.isposinf(depth_map_img))
+                print(f"""
 {runtime_parameters.confidence_threshold=}
 {runtime_parameters.enable_fill_mode=}
-{depth_map_img.shape=} {depth_map_img.dtype=}
-{all_isfinite(depth_map_img)=}
-{any_isnan(depth_map_img)=}
-{any_isneginf(depth_map_img)=}
-{any_isposinf(depth_map_img)=}
+{depth_map_img.shape=} {depth_map_img.dtype=} %
+{count_isfinite=} {100 * count_isfinite / (W * H):.3f} %
+{count_isnan=} {100 * count_isnan / (W * H):.3f} %
+{count_isneginf=} {100 * count_isneginf / (W * H):.3f} %
+{count_isposinf=} {100 * count_isposinf / (W * H):.3f} %
 """)
-            # 空間座標を得ることが必要。
-            zed.retrieve_measure(point_cloud, sl.MEASURE.XYZRGBA)
-            points = point_cloud.get_data()
-            print(f"{points.shape=}")
+                # 空間座標を得ることが必要。
+                zed.retrieve_measure(point_cloud, sl.MEASURE.XYZRGBA)
+                points = point_cloud.get_data()
+                print(f"{points.shape=}")
     zed.close()
 
 
