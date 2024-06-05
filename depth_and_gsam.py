@@ -128,6 +128,9 @@ def depth_with_hue_segment(depth_for_display_cvimg: np.ndarray, masks_cpu: np.nd
     skimage.io.imsave("bgr.png", bgr)
     return bgr
 
+def has_nan(array: np.ndarray) -> bool:
+    return np.any(np.isnan(array.flatten()))
+
 def main(opt):
     prompt = "bottle . person . box"
     prompt = "bottle"
@@ -295,6 +298,8 @@ def main(opt):
                     print(f"{depth_for_display_cvimg.shape=}")
                     print(f"{is_picked.shape=}")
                     print(f"{depth_map_img.shape=} {depth_map_img.dtype=}")
+                    assert len(depth_map_img.shape) == 2
+                    print(f"{has_nan(depth_map_img)=}")
                     # float型で標準化する。遠方ほどマイナスになる座標系なので, np.abs()を利用する
                     normalized_depth = np.clip(np.abs(depth_map_img) / abs(MAX_ABS_DEPTH - MIN_ABS_DEPTH), 0.0, 1.0)
                     print(f"{normalized_depth.shape=} {normalized_depth.dtype=}")
