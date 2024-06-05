@@ -128,7 +128,7 @@ def depth_with_hue_segment(depth_for_display_cvimg: np.ndarray, masks_cpu: np.nd
     skimage.io.imsave("bgr.png", bgr)
     return bgr
 
-def main():
+def main(opt):
     prompt = "bottle . person . box"
     prompt = "bottle"
     watching_obj = "bottle"
@@ -185,6 +185,7 @@ def main():
     runtime_parameters = predefined.RuntimeParameters()
     runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.WORLD
     # runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.CAMERA
+    runtime_parameters.confidence_threshold = opt.confidence_threshold
     for k, v in inspect.getmembers(runtime_parameters):
         if k.find("__") < 0:
             print(k, v)
@@ -309,9 +310,23 @@ def main():
                     plt.imshow(pseudo_color_depth)
                     plt.show()
 
-                    plt.subplot(2, 3, 4)
-                    plt.imshow(colorized)
+                    ax2 = plt.subplot(2, 3, 4)
+                    ax2.set_aspect("equal")
+                    found = False
+                    for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
+                        if phrase.find(watching_obj) > -1:
+                            x = selected[:, 0]
+                            y = selected[:, 1]
+                            z = -selected[:, 2]
+                            sc = plt.scatter(z, x, c=y, marker=".", cmap='jet')
+                            found = True
+                    if found > -1:
+                        plt.colorbar(sc, label='y Value')
+                    plt.xlabel("z [m]")
+                    plt.ylabel("x [m]")
+                    plt.grid(True)
                     plt.show()
+
                     plt.subplot(2, 3, 6)
                     plt.imshow(np.abs(depth_map_img), vmin=0.0, vmax=2.0, cmap="jet")
                     plt.colorbar()
@@ -381,8 +396,14 @@ if __name__ == "__main__":
         help="Resolution, can be either HD2K, HD1200, HD1080, HD720, SVGA or VGA",
         default="",
     )
+    parser.add_argument(
+        "--confidence_threshold",
+        type=float,
+        help="depth confidence_threshold(0 ~ 100)",
+        default=100,
+    )
     opt = parser.parse_args()
     if len(opt.input_svo_file) > 0 and len(opt.ip_address) > 0:
         print("Specify only input_svo_file or ip_address, or none to use wired camera, not both. Exit program")
         exit()
-    main()
+    main(opt)
