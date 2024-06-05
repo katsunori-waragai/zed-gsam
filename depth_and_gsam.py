@@ -197,7 +197,6 @@ def main(opt):
         if k.find("__") < 0:
             print(k, v)
 
-    runtime_parameters.enable_fill_mode = True
     while True:
         # Grab an image, a RuntimeParameters object must be given to grab()
         if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
@@ -295,7 +294,6 @@ def main(opt):
                     plt.ylabel("y [m]")
                     plt.grid(True)
                     plt.show()
-
                     plt.subplot(2, 3, 5)
                     is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
                     print(f"{depth_for_display_cvimg.shape=}")
