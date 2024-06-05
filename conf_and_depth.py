@@ -9,15 +9,10 @@ import argparse
 import cv2
 import numpy as np
 
-import skimage
-import matplotlib
-
-import zedhelper.handmark
 from zedhelper import predefined
-
-import gsam_module
-
+from depth_and_gsam import parse_args
 import inspect
+
 
 def any_isnan(array: np.ndarray) -> bool:
     return np.any(np.isnan(array.flatten()))
@@ -51,13 +46,9 @@ def main(opt):
             print(k, v)
     input("hit return key to continue")
 
-    # Enable object detection module
-    image = sl.Mat()
     depth_map = sl.Mat()
-    depth_for_display = sl.Mat()
     point_cloud = sl.Mat()
 
-    # Set runtime parameters
     runtime_parameters = predefined.RuntimeParameters()
     runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.WORLD
     runtime_parameters.confidence_threshold = opt.confidence_threshold
@@ -69,11 +60,8 @@ def main(opt):
     fill_modes = [True, False]
     while mode in fill_modes:
         runtime_parameters.enable_fill_mode = mode
-        # Grab an image, a RuntimeParameters object must be given to grab()
         if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
-            # Retrieve left image
             zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH)  # Retrieve depth
-            # Retrieve objects
             depth_map_img = depth_map.get_data()
             print(f"{depth_map_img.shape=} {depth_map_img.dtype=}" +
             "{all_isfinite(depth_map_img)=} {any_isnan(depth_map_img)=}" +
