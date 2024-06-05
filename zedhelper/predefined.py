@@ -54,7 +54,7 @@ def RuntimeParameters():
     # False にすると欠損値を生じます。
     runtime_parameters.enable_fill_mode = False
     # 値を100にすると欠損値が少なくなる方向。値を小さくすると、欠損値が増える。
-    runtime_parameters.confidence_threshold = 100  # max = 100
+    runtime_parameters.confidence_threshold = 90  # max = 100
     runtime_parameters.texture_confidence_threshold = 100
     # runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.WORLD
     runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.CAMERA
