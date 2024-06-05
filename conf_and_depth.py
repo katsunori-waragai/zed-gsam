@@ -100,13 +100,18 @@ def main(opt):
 
     fill_modes = [True, False]
     for mode in fill_modes:
+        print("##################")
         runtime_parameters.enable_fill_mode = mode
         if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
             zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH)  # Retrieve depth
             depth_map_img = depth_map.get_data()
-            print(f"{depth_map_img.shape=} {depth_map_img.dtype=}" +
-            f"{all_isfinite(depth_map_img)=} {any_isnan(depth_map_img)=}" +
-            f"{any_isneginf(depth_map_img)=} {any_isposinf(depth_map_img)=}")
+            print(f"""{runtime_parameters.enable_fill_mode=}
+{depth_map_img.shape=} {depth_map_img.dtype=}
+{all_isfinite(depth_map_img)=}
+{any_isnan(depth_map_img)=}
+{any_isneginf(depth_map_img)=}
+{any_isposinf(depth_map_img)=}
+""")
             # 空間座標を得ることが必要。
             zed.retrieve_measure(point_cloud, sl.MEASURE.XYZRGBA)
             points = point_cloud.get_data()
