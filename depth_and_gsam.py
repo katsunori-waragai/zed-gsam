@@ -128,6 +128,12 @@ def depth_with_hue_segment(depth_for_display_cvimg: np.ndarray, masks_cpu: np.nd
     skimage.io.imsave("bgr.png", bgr)
     return bgr
 
+def any_isnan(array: np.ndarray) -> bool:
+    return np.any(np.isnan(array.flatten()))
+
+def all_isfinite(array: np.ndarray) -> bool:
+    return np.all(np.isfinite(array.flatten()))
+
 def main(opt):
     prompt = "bottle . person . box"
     prompt = "bottle"
@@ -191,7 +197,6 @@ def main(opt):
         if k.find("__") < 0:
             print(k, v)
 
-    runtime_parameters.enable_fill_mode = True
     while True:
         # Grab an image, a RuntimeParameters object must be given to grab()
         if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
@@ -289,12 +294,14 @@ def main(opt):
                     plt.ylabel("y [m]")
                     plt.grid(True)
                     plt.show()
-
                     plt.subplot(2, 3, 5)
                     is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
                     print(f"{depth_for_display_cvimg.shape=}")
                     print(f"{is_picked.shape=}")
                     print(f"{depth_map_img.shape=} {depth_map_img.dtype=}")
+                    assert len(depth_map_img.shape) == 2
+                    print(f"{any_isnan(depth_map_img)=}")
+                    print(f"{all_isfinite(depth_map_img)=}")
                     # float型で標準化する。遠方ほどマイナスになる座標系なので, np.abs()を利用する
                     normalized_depth = np.clip(np.abs(depth_map_img) / abs(MAX_ABS_DEPTH - MIN_ABS_DEPTH), 0.0, 1.0)
                     print(f"{normalized_depth.shape=} {normalized_depth.dtype=}")

@@ -51,3 +51,39 @@
 - [] PIL.Image はAPIのインタフェースから外す。
 - [] --input_image を使用している従来のスクリプトが使えていない。
 - [] モデルのtensorRT 化ができていない。
+- [] 欠損値のある場合のdepth の表示を改善したい。
+- [] zed.retrieve_image(depth_for_display, sl.VIEW.DEPTH); depth_for_display_cvimg = depth_for_display.get_data() で取得すると、欠損値が０になる。
+  - 欠損値であることがわかりにくい。
+  - zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH); depth_map_img = depth_map.get_data() のデータを確認すること。
+  - こちらはshapeが（H,W)のデータ、値にNaNを含まない。(要確認)
+- [] runtime_parameters.confidence_threshold を depth_and_gsam.py のコマンド引数で書き換えられるようにした。
+
+## conf_and_depth.py
+
+疑問：
+depth_map と pointsのcolor でisnanの比率が異なるのが原因不明である。
+なお、depth_map と points_zとはisnanの比率が同等レベルである。
+
+```commandline
+runtime_parameters.confidence_threshold=100
+runtime_parameters.enable_fill_mode=True
+depth_map_data.shape=(1242, 2208) depth_map_data.dtype=dtype('float32') %
+count_isfinite=2737038 99.807 %
+count_isnan=0 0.000 %
+count_isneginf=0 0.000 %
+count_isposinf=5298 0.193 %
+
+points.shape=(1242, 2208, 4)
+
+count_isfinite_points=2013112  73.409 %
+count_isnan_points=729224  26.591 %
+count_isneginf_points=0  0.000 %
+count_isposinf_points=0  0.000 %
+
+
+count_isfinite_points_z=2737038  99.807 %
+count_isnan_points_z=5298  0.193 %
+count_isneginf_points_z=0  0.000 %
+count_isposinf_points_z=0  0.000 %
+```
+
