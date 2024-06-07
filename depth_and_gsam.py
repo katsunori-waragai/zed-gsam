@@ -205,7 +205,7 @@ def main(opt):
             zed.retrieve_image(image, sl.VIEW.LEFT)
             zed.retrieve_image(depth_for_display, sl.VIEW.DEPTH)  # near to camera is white
             # Retrieve objects
-            depth_map_img = depth_map.get_data()
+            depth_map_data = depth_map.get_data()
             cvimg = image.get_data()
             depth_for_display_cvimg = depth_for_display.get_data()
 
@@ -213,6 +213,10 @@ def main(opt):
             zed.retrieve_measure(point_cloud, sl.MEASURE.XYZRGBA)
             points = point_cloud.get_data()
             print(f"{points.shape=}")
+
+            # 点群の色情報が有効な領域をvalid_points_maskとして取得する。
+            points_color = points[:, :, 3]
+            valid_points_mask = np.isfinite(points_color)
             # points[y, x]で、元画像上の点と対応がつくのかどうか？
             if cvimg is not None:
                 print(f"{cvimg.shape=}")
@@ -298,12 +302,12 @@ def main(opt):
                     is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
                     print(f"{depth_for_display_cvimg.shape=}")
                     print(f"{is_picked.shape=}")
-                    print(f"{depth_map_img.shape=} {depth_map_img.dtype=}")
-                    assert len(depth_map_img.shape) == 2
-                    print(f"{any_isnan(depth_map_img)=}")
-                    print(f"{all_isfinite(depth_map_img)=}")
+                    print(f"{depth_map_data.shape=} {depth_map_data.dtype=}")
+                    assert len(depth_map_data.shape) == 2
+                    print(f"{any_isnan(depth_map_data)=}")
+                    print(f"{all_isfinite(depth_map_data)=}")
                     # float型で標準化する。遠方ほどマイナスになる座標系なので, np.abs()を利用する
-                    normalized_depth = np.clip(np.abs(depth_map_img) / abs(MAX_ABS_DEPTH - MIN_ABS_DEPTH), 0.0, 1.0)
+                    normalized_depth = np.clip(np.abs(depth_map_data) / abs(MAX_ABS_DEPTH - MIN_ABS_DEPTH), 0.0, 1.0)
                     print(f"{normalized_depth.shape=} {normalized_depth.dtype=}")
                     # float型からjetの擬似カラーに変更する。
                     pseudo_color_depth = matplotlib.cm.jet(normalized_depth)
@@ -336,7 +340,7 @@ def main(opt):
                     plt.show()
 
                     plt.subplot(2, 3, 6)
-                    plt.imshow(np.abs(depth_map_img), vmin=0.0, vmax=2.0, cmap="jet")
+                    plt.imshow(np.abs(depth_map_data), vmin=0.0, vmax=2.0, cmap="jet")
                     plt.colorbar()
                     plt.subplot(2, 3, 3)
                     # colorized と depth_for_display_cvimgとを重ね書きする。
