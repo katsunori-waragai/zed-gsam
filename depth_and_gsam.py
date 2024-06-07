@@ -221,12 +221,9 @@ def main(opt):
                         x_per = np.nanpercentile(selected[:, 0], (PERCENT_LIMIT, 100 - PERCENT_LIMIT))
                         y_per = np.nanpercentile(selected[:, 1], (PERCENT_LIMIT, 100 - PERCENT_LIMIT))
                         z_per = np.nanpercentile(selected[:, 2], (PERCENT_LIMIT, 100 - 3 * PERCENT_LIMIT))
-                        print(f"{x_per=}")
-                        print(f"{y_per=}")
-                        print(f"{z_per=}")
-                        print(f"{x_per[1] - x_per[0]=}")
-                        print(f"{y_per[1] - y_per[0]=}")
-                        print(f"{z_per[1] - z_per[0]=}")
+                        print(f"{x_per=} {x_per[1] - x_per[0]:.3f}")
+                        print(f"{y_per=} {y_per[1] - y_per[0]:.3f}")
+                        print(f"{z_per=} {z_per[1] - z_per[0]:.3f}")
 
                 if extra_plot:
                     ax1 = plt.subplot(2, 3, 1)
