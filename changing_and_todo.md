@@ -1,4 +1,4 @@
-# trouble
+# changing and todo
 - [x] --text_prompt で指定した内容に対して検出結果がないと、grounded_sam_demo.py は異常終了しないように対策する。
 - [x] H, W をheight, widthの意味になるようにして、かつ従来通りのセグメンテーションの描画になるように修正する。
 - [x] grounded_sam_output.jpg 中の原画像由来の領域を原画像の色順序に一致させる。
