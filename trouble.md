@@ -57,6 +57,8 @@
   - zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH); depth_map_img = depth_map.get_data() のデータを確認すること。
   - こちらはshapeが（H,W)のデータ、値にNaNを含まない。(要確認)
 - [] runtime_parameters.confidence_threshold を depth_and_gsam.py のコマンド引数で書き換えられるようにした。
+- [] svoファイルを保存するツールをzed-sdk からコピーして追加。
+- [] svoファイルを入力として、自作ツールが動くようにする。
 
 ## conf_and_depth.py
 
