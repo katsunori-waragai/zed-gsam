@@ -197,6 +197,12 @@ def main(opt):
         if k.find("__") < 0:
             print(k, v)
 
+    if extra_plot:
+        import matplotlib.pylab as plt
+        print("try matplotlib")
+        plt.clf()
+        plt.figure(1, figsize=(16, 12))
+
     while True:
         # Grab an image, a RuntimeParameters object must be given to grab()
         if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
@@ -246,10 +252,6 @@ def main(opt):
                 print(f"{len(pred_phrases)=}")
                 print(f"{len(selected_list)=}")
 
-                if extra_plot:
-                    import matplotlib.pylab as plt
-                    print("try matplotlib")
-                    plt.figure(figsize=(10, 6))
 
                 PERCENT_LIMIT = 5
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
@@ -265,9 +267,6 @@ def main(opt):
                         print(f"{x_per[1] - x_per[0]=}")
                         print(f"{y_per[1] - y_per[0]=}")
                         print(f"{z_per[1] - z_per[0]=}")
-
-                        # plt.plot(selected[:, 0], selected[:, 1], ".")
-                # cv2.imshow("output", blend_image)
 
                 if extra_plot:
                     ax1 = plt.subplot(2, 3, 1)
@@ -286,7 +285,6 @@ def main(opt):
                     plt.xlabel("x [m]")
                     plt.ylabel("y [m]")
                     plt.grid(True)
-                    plt.show()
 
                     ax2 = plt.subplot(2, 3, 2)
                     ax2.set_aspect("equal")
@@ -304,7 +302,6 @@ def main(opt):
                     plt.xlabel("z [m]")
                     plt.ylabel("y [m]")
                     plt.grid(True)
-                    plt.show()
                     plt.subplot(2, 3, 5)
                     is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
                     print(f"{depth_for_display_cvimg.shape=}")
@@ -327,7 +324,6 @@ def main(opt):
                     # BGRAのデータにする
                     pseudo_color_depth[:, :, 3] = alpha
                     plt.imshow(pseudo_color_depth)
-                    plt.show()
 
                     ax2 = plt.subplot(2, 3, 4)
                     ax2.set_aspect("equal")
@@ -343,8 +339,9 @@ def main(opt):
                         plt.colorbar(sc, label='y Value')
                     plt.xlabel("z [m]")
                     plt.ylabel("x [m]")
+                    ymin, ymax =ax2.get_ylim()
+                    ax2.set_ylim(ymax, ymin)
                     plt.grid(True)
-                    plt.show()
 
                     plt.subplot(2, 3, 6)
                     plt.imshow(np.abs(depth_map_data), vmin=0.0, vmax=2.0, cmap="jet")
@@ -357,19 +354,15 @@ def main(opt):
                         alpha = 0.2
                         blend_image = np.array(alpha * colorized + (1 - alpha) * depth_for_display_cvimg[:, :, :3], dtype=np.uint8)
                         plt.imshow(blend_image)
+                        plt.draw()
+                        plt.pause(0.001)
                     else:
                         # Hueでsegmentationする試み
                         bgr = depth_with_hue_segment(depth_for_display_cvimg, masks_cpu)
                         plt.imshow(bgr)
+                        plt.draw()
+                        plt.pause(0.001)
 
-
-                    # plt.subplot(2, 3, 2)
-                    # import skimage
-                    # sobel_img = skimage.filters.sobel(masks_cpu)
-                    # sobel_img_uint8 = (sobel_img * 255).astype(np.uint8)
-                    # _, binary_edges = cv2.threshold(sobel_img_uint8, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-                    #
-                    # plt.imshow(binary_edges)
 
                     plots_name = "plot_bottle.png"
                     plt.savefig(plots_name)
