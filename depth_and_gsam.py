@@ -117,15 +117,10 @@ def as_matrix(chw_array):
 def depth_with_hue_segment(depth_for_display_cvimg: np.ndarray, masks_cpu: np.ndarray) -> np.ndarray:
     import hsv_view
 
-    print(f"{masks_cpu.shape=} {masks_cpu.dtype=}")
     masks_cpu = as_matrix(masks_cpu)
     depth_for_display_gray = depth_for_display_cvimg[:, :, 0]
-    print(f"{depth_for_display_gray.shape=} {depth_for_display_gray.dtype=}")
-    print(f"{masks_cpu.shape=} {masks_cpu.dtype=}")
     hsv_img = hsv_view.gen_hsv_image(depth_for_display_gray, masks_cpu)
-    print(f"{hsv_img.shape=} {hsv_img.dtype=}")
     bgr = cv2.cvtColor(hsv_img, cv2.COLOR_HSV2RGB)
-    print(f"{bgr.shape=} {bgr.dtype=}")
     skimage.io.imsave("bgr.png", bgr)
     return bgr
 
@@ -179,9 +174,7 @@ def main(opt):
     # runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.CAMERA
     runtime_parameters.confidence_threshold = opt.confidence_threshold
     print(f"### {runtime_parameters.confidence_threshold=}")
-    for k, v in inspect.getmembers(runtime_parameters):
-        if k.find("__") < 0:
-            print(k, v)
+    zedhelper.util.show_params(runtime_parameters)
 
     if extra_plot:
         import matplotlib.pylab as plt
@@ -271,19 +264,12 @@ def main(opt):
                     plt.grid(True)
                     plt.subplot(2, 3, 5)
                     is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
-                    print(f"{depth_for_display_cvimg.shape=}")
-                    print(f"{is_picked.shape=}")
-                    print(f"{depth_map_img.shape=} {depth_map_img.dtype=}")
                     assert len(depth_map_img.shape) == 2
                     # float型で標準化する。遠方ほどマイナスになる座標系なので, np.abs()を利用する
                     normalized_depth = np.clip(np.abs(depth_map_img) / abs(MAX_ABS_DEPTH - MIN_ABS_DEPTH), 0.0, 1.0)
-                    print(f"{normalized_depth.shape=} {normalized_depth.dtype=}")
                     # float型からjetの擬似カラーに変更する。
                     pseudo_color_depth = matplotlib.cm.jet(normalized_depth)
-                    print(f"{pseudo_color_depth.dtype=}")
                     alpha = np.array(1.0 * uint_masks.reshape(H, W) > 0, dtype=pseudo_color_depth.dtype)
-                    print(f"{pseudo_color_depth.shape=} {pseudo_color_depth.dtype=}")
-                    print(f"{alpha.shape=} {alpha.dtype=}")
                     assert len(pseudo_color_depth.shape) == 3
                     assert pseudo_color_depth.shape[2] in (3, 4)
                     # BGRAのデータにする
