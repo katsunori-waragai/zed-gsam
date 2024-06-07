@@ -64,6 +64,12 @@ optional arguments:
 
 ```
 
+#### SVO ファイルへの保存とそれを入力とする動作例
+```commandline
+python3 svo_recording.py --output_svo_file bottles.svo
+python3 svo_playback.py --input_svo_file bottles.svo2 
+python3 conf_and_depth.py --input_svo_file bottles.svo2
+```
 
 ### segmentation quality
 目視確認するためのplotを追加した。
