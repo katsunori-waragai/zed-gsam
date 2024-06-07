@@ -200,6 +200,7 @@ def main(opt):
     if extra_plot:
         import matplotlib.pylab as plt
         print("try matplotlib")
+        plt.clf()
         plt.figure(1, figsize=(16, 12))
 
     while True:
@@ -256,9 +257,6 @@ def main(opt):
                         print(f"{y_per[1] - y_per[0]=}")
                         print(f"{z_per[1] - z_per[0]=}")
 
-                        # plt.plot(selected[:, 0], selected[:, 1], ".")
-                # cv2.imshow("output", blend_image)
-
                 if extra_plot:
                     ax1 = plt.subplot(2, 3, 1)
                     ax1.set_aspect("equal")
@@ -276,8 +274,6 @@ def main(opt):
                     plt.xlabel("x [m]")
                     plt.ylabel("y [m]")
                     plt.grid(True)
-                    # plt.draw()
-                    # plt.pause(0.001)
 
                     ax2 = plt.subplot(2, 3, 2)
                     ax2.set_aspect("equal")
@@ -295,8 +291,6 @@ def main(opt):
                     plt.xlabel("z [m]")
                     plt.ylabel("y [m]")
                     plt.grid(True)
-                    # plt.draw()
-                    # plt.pause(0.001)
                     plt.subplot(2, 3, 5)
                     is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
                     print(f"{depth_for_display_cvimg.shape=}")
@@ -319,8 +313,6 @@ def main(opt):
                     # BGRAのデータにする
                     pseudo_color_depth[:, :, 3] = alpha
                     plt.imshow(pseudo_color_depth)
-                    # plt.draw()
-                    # plt.pause(0.001)
 
                     ax2 = plt.subplot(2, 3, 4)
                     ax2.set_aspect("equal")
@@ -336,9 +328,9 @@ def main(opt):
                         plt.colorbar(sc, label='y Value')
                     plt.xlabel("z [m]")
                     plt.ylabel("x [m]")
+                    ymin, ymax =ax2.get_ylim()
+                    ax2.set_ylim(ymax, ymin)
                     plt.grid(True)
-                    # plt.draw()
-                    # plt.pause(0.001)
 
                     plt.subplot(2, 3, 6)
                     plt.imshow(np.abs(depth_map_img), vmin=0.0, vmax=2.0, cmap="jet")
@@ -360,14 +352,6 @@ def main(opt):
                         plt.draw()
                         plt.pause(0.001)
 
-
-                    # plt.subplot(2, 3, 2)
-                    # import skimage
-                    # sobel_img = skimage.filters.sobel(masks_cpu)
-                    # sobel_img_uint8 = (sobel_img * 255).astype(np.uint8)
-                    # _, binary_edges = cv2.threshold(sobel_img_uint8, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-                    #
-                    # plt.imshow(binary_edges)
 
                     plots_name = "plot_bottle.png"
                     plt.savefig(plots_name)
