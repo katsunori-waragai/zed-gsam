@@ -41,6 +41,29 @@ python3 depth-and-sam.py
 - grounded-sam での検出・セグメンテーションの表示
 - mediapipe でのhand-landmark の表示
 - zed sdkによるdepth画像のグレースケールでの表示
+- `--input_svo_file INPUT_SVO_FILE` も動作する。
+
+```commandline
+python3 depth_and_gsam.py -h
+usage: depth_and_gsam.py [-h] [--input_svo_file INPUT_SVO_FILE]
+                         [--ip_address IP_ADDRESS] [--resolution RESOLUTION]
+                         [--confidence_threshold CONFIDENCE_THRESHOLD]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --input_svo_file INPUT_SVO_FILE
+                        Path to an .svo file, if you want to replay it
+  --ip_address IP_ADDRESS
+                        IP Adress, in format a.b.c.d:port or a.b.c.d, if you
+                        have a streaming setup
+  --resolution RESOLUTION
+                        Resolution, can be either HD2K, HD1200, HD1080, HD720,
+                        SVGA or VGA
+  --confidence_threshold CONFIDENCE_THRESHOLD
+                        depth confidence_threshold(0 ~ 100)
+
+```
+
 
 ### segmentation quality
 目視確認するためのplotを追加した。
@@ -66,7 +89,17 @@ python3 depth-and-sam.py
 # 値を100にすると欠損値が少なくなる方向。値を小さくすると、欠損値が増える。
     runtime_parameters.confidence_threshold = 100  # max = 100
 ```
+
+### わかったこと
+- Segmentation Anything(SAM) のセグメンテーションは、depthによるセグメンテーションよりも良質のセグメンテーションを返している。
+- svo_recording.py で保存したSVO2ファイルを、自作スクリプトの入力にできる。
+- このため、再現性のある状況で、設定パラメータの効果を評価できる。
+
 #### 解決方法案
+- 右カメラ・左カメラのSAMのセグメンテーションをヒントに、対応する視差を計算する。
+- depth-anything との比較を実施する。
+  - depthの順序関係が重要だと考えている。
+  - 対象物と手（ハンド）との前後関係をほどよく判断できれば、ハンドを動作させることができるのではないか？
 - segmentation 後の領域を収縮(Erosion) して領域を狭めてから、点群と紐付ける
 
 
