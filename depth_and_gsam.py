@@ -275,7 +275,8 @@ def main(opt):
                     plt.xlabel("x [m]")
                     plt.ylabel("y [m]")
                     plt.grid(True)
-                    plt.show()
+                    plt.draw()
+                    plt.pause(0.001)
 
                     ax2 = plt.subplot(2, 3, 2)
                     ax2.set_aspect("equal")
@@ -293,7 +294,8 @@ def main(opt):
                     plt.xlabel("z [m]")
                     plt.ylabel("y [m]")
                     plt.grid(True)
-                    plt.show()
+                    plt.draw()
+                    plt.pause(0.001)
                     plt.subplot(2, 3, 5)
                     is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
                     print(f"{depth_for_display_cvimg.shape=}")
@@ -316,7 +318,8 @@ def main(opt):
                     # BGRAのデータにする
                     pseudo_color_depth[:, :, 3] = alpha
                     plt.imshow(pseudo_color_depth)
-                    plt.show()
+                    plt.draw()
+                    plt.pause(0.001)
 
                     ax2 = plt.subplot(2, 3, 4)
                     ax2.set_aspect("equal")
@@ -333,7 +336,8 @@ def main(opt):
                     plt.xlabel("z [m]")
                     plt.ylabel("x [m]")
                     plt.grid(True)
-                    plt.show()
+                    plt.draw()
+                    plt.pause(0.001)
 
                     plt.subplot(2, 3, 6)
                     plt.imshow(np.abs(depth_map_img), vmin=0.0, vmax=2.0, cmap="jet")
@@ -346,10 +350,14 @@ def main(opt):
                         alpha = 0.2
                         blend_image = np.array(alpha * colorized + (1 - alpha) * depth_for_display_cvimg[:, :, :3], dtype=np.uint8)
                         plt.imshow(blend_image)
+                        plt.draw()
+                        plt.pause(0.001)
                     else:
                         # Hueでsegmentationする試み
                         bgr = depth_with_hue_segment(depth_for_display_cvimg, masks_cpu)
                         plt.imshow(bgr)
+                        plt.draw()
+                        plt.pause(0.001)
 
 
                     # plt.subplot(2, 3, 2)
