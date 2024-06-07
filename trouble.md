@@ -58,6 +58,17 @@
   - こちらはshapeが（H,W)のデータ、値にNaNを含まない。(要確認)
 - [] runtime_parameters.confidence_threshold を depth_and_gsam.py のコマンド引数で書き換えられるようにした。
 - [] svoファイルを保存するツールをzed-sdk からコピーして追加。
+  - ZED-SDK 4.1 からはsvo2のファイルが標準になっている。
+  - そのため以下の手順で入力しても、svo2ファイルが保存された。
+  - それを入力ファイルに指定して、自作スクリプトが動作した。
+```commandline
+python3 svo_recording.py -h
+python3 svo_recording.py --output_svo_file bottles.svo
+python3 svo_playback.py -h
+python3 svo_playback.py --input_svo_file bottles.svo2 
+python3 conf_and_depth.py --input_svo_file bottles.svo2
+```
+
 - [] svoファイルを入力として、自作ツールが動くようにする。
 
 ## conf_and_depth.py
