@@ -13,6 +13,7 @@ import skimage
 import matplotlib
 
 import zedhelper.handmark
+import zedhelper.util
 from zedhelper import predefined
 
 import gsam_module
@@ -166,11 +167,7 @@ def main(opt):
         print(err)
         exit(1)
 
-    print(f"{init_params=}")
-    for k, v in inspect.getmembers(init_params):
-        if k.find("__") < 0:
-            print(k, v)
-    input("hit return key to continue")
+    zedhelper.util.show_params(init_params)
 
     image = sl.Mat()
     depth_map = sl.Mat()
