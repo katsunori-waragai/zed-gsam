@@ -13,6 +13,7 @@ import skimage
 import matplotlib
 
 import zedhelper.handmark
+import zedhelper.util
 from zedhelper import predefined
 
 import gsam_module
@@ -116,15 +117,10 @@ def as_matrix(chw_array):
 def depth_with_hue_segment(depth_for_display_cvimg: np.ndarray, masks_cpu: np.ndarray) -> np.ndarray:
     import hsv_view
 
-    print(f"{masks_cpu.shape=} {masks_cpu.dtype=}")
     masks_cpu = as_matrix(masks_cpu)
     depth_for_display_gray = depth_for_display_cvimg[:, :, 0]
-    print(f"{depth_for_display_gray.shape=} {depth_for_display_gray.dtype=}")
-    print(f"{masks_cpu.shape=} {masks_cpu.dtype=}")
     hsv_img = hsv_view.gen_hsv_image(depth_for_display_gray, masks_cpu)
-    print(f"{hsv_img.shape=} {hsv_img.dtype=}")
     bgr = cv2.cvtColor(hsv_img, cv2.COLOR_HSV2RGB)
-    print(f"{bgr.shape=} {bgr.dtype=}")
     skimage.io.imsave("bgr.png", bgr)
     return bgr
 
@@ -146,7 +142,6 @@ def main(opt):
         use_sam_hq=False,
     )
 
-    # Create a Camera object
     zed = sl.Camera()
 
     use_hand = True  # mediapipe hand detection
@@ -155,7 +150,6 @@ def main(opt):
     if use_hand:
         hand_marker = zedhelper.handmark.HandMarker()
 
-    # Create a InitParameters object and set configuration parameters
     init_params = predefined.InitParameters()
 
     parse_args(init_params)
@@ -163,39 +157,24 @@ def main(opt):
     init_params.depth_mode = sl.DEPTH_MODE.ULTRA
     # init_params.depth_mode = sl.DEPTH_MODE.NEURAL2
 
-    # Open the camera
     err = zed.open(init_params)
     if err != sl.ERROR_CODE.SUCCESS:
         print(err)
         exit(1)
 
-    print(f"{init_params=}")
-    for k, v in inspect.getmembers(init_params):
-        if k.find("__") < 0:
-            print(k, v)
-    input("hit return key to continue")
+    zedhelper.util.show_params(init_params)
 
-    # Enable object detection module
-    camera_info = zed.get_camera_information()
-    # Create OpenGL viewer
-
-    # Configure object detection runtime parameters
-
-    # Create ZED objects filled in the main loop
     image = sl.Mat()
     depth_map = sl.Mat()
     depth_for_display = sl.Mat()
     point_cloud = sl.Mat()
 
-    # Set runtime parameters
     runtime_parameters = predefined.RuntimeParameters()
     runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.WORLD
     # runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.CAMERA
     runtime_parameters.confidence_threshold = opt.confidence_threshold
     print(f"### {runtime_parameters.confidence_threshold=}")
-    for k, v in inspect.getmembers(runtime_parameters):
-        if k.find("__") < 0:
-            print(k, v)
+    zedhelper.util.show_params(runtime_parameters)
 
     if extra_plot:
         import matplotlib.pylab as plt
@@ -204,13 +183,10 @@ def main(opt):
         plt.figure(1, figsize=(16, 12))
 
     while True:
-        # Grab an image, a RuntimeParameters object must be given to grab()
         if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
-            # Retrieve left image
             zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH)  # Retrieve depth
             zed.retrieve_image(image, sl.VIEW.LEFT)
             zed.retrieve_image(depth_for_display, sl.VIEW.DEPTH)  # near to camera is white
-            # Retrieve objects
             depth_map_img = depth_map.get_data()
             cvimg = image.get_data()
             depth_for_display_cvimg = depth_for_display.get_data()
@@ -229,7 +205,6 @@ def main(opt):
                 uint_masks = gsam_module.gen_mask_img(masks).cpu().numpy()
                 mask_val = np.unique(uint_masks).astype(np.int16)
                 # mask_val が連続的な整数ではないことが判明した。
-                print(f"{mask_val=}　{len(mask_val)}")
 
                 pred_phrases = gsam_predictor.pred_phrases
                 boxes_filt = gsam_predictor.boxes_filt
@@ -238,24 +213,17 @@ def main(opt):
                 C, H, W = uint_masks.shape[:3]
                 assert C == 1
                 selected_list = points_by_segmentation(points, uint_masks.reshape(H, W))
-                print(f"{len(pred_phrases)=}")
-                print(f"{len(selected_list)=}")
 
 
                 PERCENT_LIMIT = 5
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
                     if phrase.find(watching_obj) > -1:
-                        print(f"{i=} {pred_phrases[i]=} {selected=} {phrase=}")
-                        print(f"{selected.shape=}")
                         x_per = np.nanpercentile(selected[:, 0], (PERCENT_LIMIT, 100 - PERCENT_LIMIT))
                         y_per = np.nanpercentile(selected[:, 1], (PERCENT_LIMIT, 100 - PERCENT_LIMIT))
                         z_per = np.nanpercentile(selected[:, 2], (PERCENT_LIMIT, 100 - 3 * PERCENT_LIMIT))
-                        print(f"{x_per=}")
-                        print(f"{y_per=}")
-                        print(f"{z_per=}")
-                        print(f"{x_per[1] - x_per[0]=}")
-                        print(f"{y_per[1] - y_per[0]=}")
-                        print(f"{z_per[1] - z_per[0]=}")
+                        print(f"{x_per=} {x_per[1] - x_per[0]:.3f}")
+                        print(f"{y_per=} {y_per[1] - y_per[0]:.3f}")
+                        print(f"{z_per=} {z_per[1] - z_per[0]:.3f}")
 
                 if extra_plot:
                     ax1 = plt.subplot(2, 3, 1)
@@ -293,21 +261,12 @@ def main(opt):
                     plt.grid(True)
                     plt.subplot(2, 3, 5)
                     is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
-                    print(f"{depth_for_display_cvimg.shape=}")
-                    print(f"{is_picked.shape=}")
-                    print(f"{depth_map_img.shape=} {depth_map_img.dtype=}")
                     assert len(depth_map_img.shape) == 2
-                    print(f"{any_isnan(depth_map_img)=}")
-                    print(f"{all_isfinite(depth_map_img)=}")
                     # float型で標準化する。遠方ほどマイナスになる座標系なので, np.abs()を利用する
                     normalized_depth = np.clip(np.abs(depth_map_img) / abs(MAX_ABS_DEPTH - MIN_ABS_DEPTH), 0.0, 1.0)
-                    print(f"{normalized_depth.shape=} {normalized_depth.dtype=}")
                     # float型からjetの擬似カラーに変更する。
                     pseudo_color_depth = matplotlib.cm.jet(normalized_depth)
-                    print(f"{pseudo_color_depth.dtype=}")
                     alpha = np.array(1.0 * uint_masks.reshape(H, W) > 0, dtype=pseudo_color_depth.dtype)
-                    print(f"{pseudo_color_depth.shape=} {pseudo_color_depth.dtype=}")
-                    print(f"{alpha.shape=} {alpha.dtype=}")
                     assert len(pseudo_color_depth.shape) == 3
                     assert pseudo_color_depth.shape[2] in (3, 4)
                     # BGRAのデータにする
@@ -336,8 +295,6 @@ def main(opt):
                     plt.imshow(np.abs(depth_map_img), vmin=0.0, vmax=2.0, cmap="jet")
                     plt.colorbar()
                     plt.subplot(2, 3, 3)
-                    # colorized と depth_for_display_cvimgとを重ね書きする。
-
                     masks_cpu = gsam_module.gen_mask_img(masks).cpu().numpy()
                     if 1:
                         alpha = 0.2
@@ -363,18 +320,16 @@ def main(opt):
                 cv2.imshow("annotated_image", resize_image(cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR), 0.5))
             cv2.imshow("depth_for_display", resize_image(depth_for_display_cvimg, 0.5))
 
-            # cv2.imshow("edge", binary_edges)
             key = cv2.waitKey(1)
             if key == ord("q"):
                 break
 
     cv2.destroyAllWindows()
     image.free(memory_type=sl.MEM.CPU)
-    # Disable modules and close camera
-
+    depth_map.free(memory_type=sl.MEM.CPU)
+    depth_for_display.free(memory_type=sl.MEM.CPU)
+    point_cloud.free(memory_type=sl.MEM.CPU)
     zed.close()
-
-
 
 
 if __name__ == "__main__":
