@@ -215,7 +215,6 @@ def main(opt):
                 uint_masks = gsam_module.gen_mask_img(masks).cpu().numpy()
                 mask_val = np.unique(uint_masks).astype(np.int16)
                 # mask_val が連続的な整数ではないことが判明した。
-                print(f"{mask_val=}　{len(mask_val)}")
 
                 pred_phrases = gsam_predictor.pred_phrases
                 boxes_filt = gsam_predictor.boxes_filt
@@ -229,8 +228,6 @@ def main(opt):
                 PERCENT_LIMIT = 5
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
                     if phrase.find(watching_obj) > -1:
-                        print(f"{i=} {pred_phrases[i]=} {selected=} {phrase=}")
-                        print(f"{selected.shape=}")
                         x_per = np.nanpercentile(selected[:, 0], (PERCENT_LIMIT, 100 - PERCENT_LIMIT))
                         y_per = np.nanpercentile(selected[:, 1], (PERCENT_LIMIT, 100 - PERCENT_LIMIT))
                         z_per = np.nanpercentile(selected[:, 2], (PERCENT_LIMIT, 100 - 3 * PERCENT_LIMIT))
