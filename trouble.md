@@ -66,7 +66,7 @@ python3 svo_recording.py -h
 python3 svo_recording.py --output_svo_file bottles.svo
 python3 svo_playback.py -h
 python3 svo_playback.py --input_svo_file bottles.svo2 
-python3 conf_and_depth.py --input_svo_file bottles.svo2`
+python3 conf_and_depth.py --input_svo_file bottles.svo2
 ```
 
 - [] svoファイルを入力として、自作ツールが動くようにする。
