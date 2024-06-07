@@ -197,6 +197,11 @@ def main(opt):
         if k.find("__") < 0:
             print(k, v)
 
+    if extra_plot:
+        import matplotlib.pylab as plt
+        print("try matplotlib")
+        plt.figure(1, figsize=(16, 12))
+
     while True:
         # Grab an image, a RuntimeParameters object must be given to grab()
         if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
@@ -235,10 +240,6 @@ def main(opt):
                 print(f"{len(pred_phrases)=}")
                 print(f"{len(selected_list)=}")
 
-                if extra_plot:
-                    import matplotlib.pylab as plt
-                    print("try matplotlib")
-                    plt.figure(figsize=(10, 6))
 
                 PERCENT_LIMIT = 5
                 for i, (selected, phrase) in enumerate(zip(selected_list, pred_phrases)):
@@ -275,8 +276,8 @@ def main(opt):
                     plt.xlabel("x [m]")
                     plt.ylabel("y [m]")
                     plt.grid(True)
-                    plt.draw()
-                    plt.pause(0.001)
+                    # plt.draw()
+                    # plt.pause(0.001)
 
                     ax2 = plt.subplot(2, 3, 2)
                     ax2.set_aspect("equal")
@@ -294,8 +295,8 @@ def main(opt):
                     plt.xlabel("z [m]")
                     plt.ylabel("y [m]")
                     plt.grid(True)
-                    plt.draw()
-                    plt.pause(0.001)
+                    # plt.draw()
+                    # plt.pause(0.001)
                     plt.subplot(2, 3, 5)
                     is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
                     print(f"{depth_for_display_cvimg.shape=}")
@@ -318,8 +319,8 @@ def main(opt):
                     # BGRAのデータにする
                     pseudo_color_depth[:, :, 3] = alpha
                     plt.imshow(pseudo_color_depth)
-                    plt.draw()
-                    plt.pause(0.001)
+                    # plt.draw()
+                    # plt.pause(0.001)
 
                     ax2 = plt.subplot(2, 3, 4)
                     ax2.set_aspect("equal")
@@ -336,8 +337,8 @@ def main(opt):
                     plt.xlabel("z [m]")
                     plt.ylabel("x [m]")
                     plt.grid(True)
-                    plt.draw()
-                    plt.pause(0.001)
+                    # plt.draw()
+                    # plt.pause(0.001)
 
                     plt.subplot(2, 3, 6)
                     plt.imshow(np.abs(depth_map_img), vmin=0.0, vmax=2.0, cmap="jet")
