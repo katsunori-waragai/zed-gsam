@@ -14,6 +14,7 @@ RUN apt update && apt install -y --no-install-recommends wget ffmpeg=7:* \
     libsm6=2:* libxext6=2:* git=1:* \
     vim=2:* \
     zstd
+RUN apt install -y python3-tk
 RUN apt clean -y && apt autoremove -y && rm -rf /var/lib/apt/lists/*
 # only for development
 RUN apt update && apt install -y eog nano
