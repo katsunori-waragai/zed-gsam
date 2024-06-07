@@ -218,6 +218,13 @@ def main(opt):
             points_color = points[:, :, 3]
             valid_points_mask = np.isfinite(points_color)
             # points[y, x]で、元画像上の点と対応がつくのかどうか？
+
+            depth_map_data_modified = depth_map_data.copy()
+            depth_map_data_modified[:, :, 3][valid_points_mask] == np.nan
+            plt.imshow(depth_map_data_modified)
+            plt.show()
+            continue
+
             if cvimg is not None:
                 print(f"{cvimg.shape=}")
                 cvimg_bgr = cvimg[:, :, :3].copy()
