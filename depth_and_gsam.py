@@ -146,7 +146,6 @@ def main(opt):
         use_sam_hq=False,
     )
 
-    # Create a Camera object
     zed = sl.Camera()
 
     use_hand = True  # mediapipe hand detection
@@ -155,7 +154,6 @@ def main(opt):
     if use_hand:
         hand_marker = zedhelper.handmark.HandMarker()
 
-    # Create a InitParameters object and set configuration parameters
     init_params = predefined.InitParameters()
 
     parse_args(init_params)
@@ -163,7 +161,6 @@ def main(opt):
     init_params.depth_mode = sl.DEPTH_MODE.ULTRA
     # init_params.depth_mode = sl.DEPTH_MODE.NEURAL2
 
-    # Open the camera
     err = zed.open(init_params)
     if err != sl.ERROR_CODE.SUCCESS:
         print(err)
@@ -175,19 +172,11 @@ def main(opt):
             print(k, v)
     input("hit return key to continue")
 
-    # Enable object detection module
-    camera_info = zed.get_camera_information()
-    # Create OpenGL viewer
-
-    # Configure object detection runtime parameters
-
-    # Create ZED objects filled in the main loop
     image = sl.Mat()
     depth_map = sl.Mat()
     depth_for_display = sl.Mat()
     point_cloud = sl.Mat()
 
-    # Set runtime parameters
     runtime_parameters = predefined.RuntimeParameters()
     runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.WORLD
     # runtime_parameters.measure3D_reference_frame = sl.REFERENCE_FRAME.CAMERA
@@ -204,13 +193,10 @@ def main(opt):
         plt.figure(1, figsize=(16, 12))
 
     while True:
-        # Grab an image, a RuntimeParameters object must be given to grab()
         if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
-            # Retrieve left image
             zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH)  # Retrieve depth
             zed.retrieve_image(image, sl.VIEW.LEFT)
             zed.retrieve_image(depth_for_display, sl.VIEW.DEPTH)  # near to camera is white
-            # Retrieve objects
             depth_map_img = depth_map.get_data()
             cvimg = image.get_data()
             depth_for_display_cvimg = depth_for_display.get_data()
@@ -238,8 +224,6 @@ def main(opt):
                 C, H, W = uint_masks.shape[:3]
                 assert C == 1
                 selected_list = points_by_segmentation(points, uint_masks.reshape(H, W))
-                print(f"{len(pred_phrases)=}")
-                print(f"{len(selected_list)=}")
 
 
                 PERCENT_LIMIT = 5
@@ -297,8 +281,6 @@ def main(opt):
                     print(f"{is_picked.shape=}")
                     print(f"{depth_map_img.shape=} {depth_map_img.dtype=}")
                     assert len(depth_map_img.shape) == 2
-                    print(f"{any_isnan(depth_map_img)=}")
-                    print(f"{all_isfinite(depth_map_img)=}")
                     # float型で標準化する。遠方ほどマイナスになる座標系なので, np.abs()を利用する
                     normalized_depth = np.clip(np.abs(depth_map_img) / abs(MAX_ABS_DEPTH - MIN_ABS_DEPTH), 0.0, 1.0)
                     print(f"{normalized_depth.shape=} {normalized_depth.dtype=}")
@@ -336,8 +318,6 @@ def main(opt):
                     plt.imshow(np.abs(depth_map_img), vmin=0.0, vmax=2.0, cmap="jet")
                     plt.colorbar()
                     plt.subplot(2, 3, 3)
-                    # colorized と depth_for_display_cvimgとを重ね書きする。
-
                     masks_cpu = gsam_module.gen_mask_img(masks).cpu().numpy()
                     if 1:
                         alpha = 0.2
@@ -363,18 +343,16 @@ def main(opt):
                 cv2.imshow("annotated_image", resize_image(cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR), 0.5))
             cv2.imshow("depth_for_display", resize_image(depth_for_display_cvimg, 0.5))
 
-            # cv2.imshow("edge", binary_edges)
             key = cv2.waitKey(1)
             if key == ord("q"):
                 break
 
     cv2.destroyAllWindows()
     image.free(memory_type=sl.MEM.CPU)
-    # Disable modules and close camera
-
+    depth_map.free(memory_type=sl.MEM.CPU)
+    depth_for_display.free(memory_type=sl.MEM.CPU)
+    point_cloud.free(memory_type=sl.MEM.CPU)
     zed.close()
-
-
 
 
 if __name__ == "__main__":
