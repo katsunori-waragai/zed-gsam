@@ -179,8 +179,9 @@ def main(opt):
     if extra_plot:
         import matplotlib.pylab as plt
         print("try matplotlib")
+        condition_str = f"mode: {init_params.depth_mode} conf: {runtime_parameters.confidence_threshold}"
         plt.clf()
-        plt.figure(1, figsize=(16, 12))
+        plt.figure(condition_str, figsize=(16, 12))
 
     while True:
         if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
