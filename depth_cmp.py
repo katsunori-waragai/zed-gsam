@@ -118,7 +118,7 @@ def main(opt):
     print(f"### {runtime_parameters.confidence_threshold=}")
     zedhelper.util.show_params(runtime_parameters)
 
-    condition_str = f"conf: {runtime_parameters.confidence_threshold}"
+    condition_str = f"mode: {init_params.depth_mode} conf: {runtime_parameters.confidence_threshold}"
 
     while True:
         if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
