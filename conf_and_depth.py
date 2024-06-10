@@ -129,17 +129,9 @@ def main(opt):
             if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
                 zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH)  # Retrieve depth
                 depth_map_data = depth_map.get_data()
-                H, W = depth_map_data.shape[:2]
-                _ = stat_depth(depth_map_data, percent=True)
-#                 print(f"""
-# {runtime_parameters.confidence_threshold=}
-# {runtime_parameters.enable_fill_mode=}
-# {depth_map_data.shape=} {depth_map_data.dtype=} %
-# {count_isfinite=} {100 * count_isfinite / (W * H):.3f} %
-# {count_isnan=} {100 * count_isnan / (W * H):.3f} %
-# {count_isneginf=} {100 * count_isneginf / (W * H):.3f} %
-# {count_isposinf=} {100 * count_isposinf / (W * H):.3f} %
-# """)
+                depth_map_percent = stat_depth(depth_map_data, percent=True)
+                for k, v in depth_map_percent.items():
+                    print(f"depthmap_{k} {v:.3f}")
                 # 空間座標を得ることが必要。
                 zed.retrieve_measure(point_cloud, sl.MEASURE.XYZRGBA)
                 points = point_cloud.get_data()
