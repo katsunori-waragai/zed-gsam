@@ -208,21 +208,6 @@ def main(opt):
             depth_map_data_modified = depth_map_data.copy()
             print(f"{depth_map_data_modified.shape=} {depth_map_data_modified.dtype=}")
             depth_map_data_modified[np.logical_not(valid_points_mask)] = np.nan
-            plt.figure(10)
-            plt.clf()
-            plt.subplot(1, 2, 1)
-            plt.imshow(depth_map_data_modified, vmax=2.0, vmin=0.0)  # far is positive
-            plt.title("depth_map_data_modified")
-            plt.colorbar()
-            plt.grid(True)
-            plt.subplot(1, 2, 2)
-            plt.imshow(depth_map_data, vmax=2.0, vmin=0.0)  # far is positive
-            plt.title("depth_map_data")
-            plt.colorbar()
-            plt.grid(True)
-            plt.draw()
-            plt.pause(0.001)
-            continue
 
             if cvimg is not None:
                 print(f"{cvimg.shape=}")
