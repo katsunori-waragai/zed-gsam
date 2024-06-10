@@ -142,15 +142,14 @@ def main(opt):
                 zed.retrieve_measure(point_cloud, sl.MEASURE.XYZRGBA)
                 points = point_cloud.get_data()
                 assert depth_map_data.shape == points.shape[:2]
-                points_color = points[:, :, 3]
-                counts_color_percent = stat_depth(points_color, percent=True)
-                for k, v in counts_color_percent.items():
-                    print(f"pointcolor_{k} {v:.3f}")
-
                 points_z = points[:, :, 2]
                 count_z_percent = stat_depth(points_z, percent=True)
                 for k, v in count_z_percent.items():
                     print(f"pointz_{k} {v:.3f}")
+                points_color = points[:, :, 3]
+                counts_color_percent = stat_depth(points_color, percent=True)
+                for k, v in counts_color_percent.items():
+                    print(f"pointcolor_{k} {v:.3f}")
     zed.close()
 
 
