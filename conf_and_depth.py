@@ -130,7 +130,7 @@ def main(opt):
                 zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH)  # Retrieve depth
                 depth_map_data = depth_map.get_data()
                 H, W = depth_map_data.shape[:2]
-                _, _ = stat_depth(depth_map_data, with_percent=True)
+                _ = stat_depth(depth_map_data, percent=True)
 #                 print(f"""
 # {runtime_parameters.confidence_threshold=}
 # {runtime_parameters.enable_fill_mode=}
@@ -146,19 +146,13 @@ def main(opt):
                 print(f"{points.shape=}")
                 assert depth_map_data.shape == points.shape[:2]
                 points_color = points[:, :, 3]
-                count_isfinite_points = np.count_nonzero(np.isfinite(points_color))
-                count_isnan_points = np.count_nonzero(np.isnan(points_color))
-                count_isneginf_points = np.count_nonzero(np.isneginf(points_color))
-                count_isposinf_points = np.count_nonzero(np.isposinf(points_color))
-                print(f"""
-{count_isfinite_points=} {100 * count_isfinite_points / (W * H): .3f} %
-{count_isnan_points=} {100 * count_isnan_points / (W * H): .3f} %
-{count_isneginf_points=} {100 * count_isneginf_points / (W * H): .3f} %
-{count_isposinf_points=} {100 * count_isposinf_points / (W * H): .3f} %
-""")
+                counts_color_percent = stat_depth(points_color, percent=True)
+                for k, v in counts_color_percent.items():
+                    print(f"pointcolor_{k} {v:.3f}")
+
                 points_z = points[:, :, 2]
-                count_z, counts_percent = stat_depth(points_z, with_percent=True)
-                for k, v in counts_percent.items():
+                count_z_percent = stat_depth(points_z, percent=True)
+                for k, v in count_z_percent.items():
                     print(f"pointz_{k} {v:.3f}")
     zed.close()
 
