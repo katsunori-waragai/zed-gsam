@@ -198,13 +198,11 @@ def main(opt):
             print(f"{points.shape=}")
 
             # 点群の色情報が有効な領域をvalid_points_maskとして取得する。
+            # その比較は、depth_cmp.py スクリプトで実行するようにした。
+            # このスクリプトの中では、点群の色情報が有効な領域での処理をまだ行なっていない。
             points_color = points[:, :, 3]
             valid_points_mask = np.isfinite(points_color)
             print(f"{valid_points_mask.shape=} {valid_points_mask.dtype=}")
-            # points[y, x]で、元画像上の点と対応がつくのかどうか？
-
-
-
             depth_map_data_modified = depth_map_data.copy()
             print(f"{depth_map_data_modified.shape=} {depth_map_data_modified.dtype=}")
             depth_map_data_modified[np.logical_not(valid_points_mask)] = np.nan
