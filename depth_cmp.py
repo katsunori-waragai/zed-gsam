@@ -176,12 +176,6 @@ def main(opt):
     print(f"### {runtime_parameters.confidence_threshold=}")
     zedhelper.util.show_params(runtime_parameters)
 
-    if extra_plot:
-        import matplotlib.pylab as plt
-        print("try matplotlib")
-        plt.clf()
-        plt.figure(1, figsize=(16, 12))
-
     while True:
         if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
             zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH)  # Retrieve depth
@@ -208,7 +202,7 @@ def main(opt):
             depth_map_data_modified = depth_map_data.copy()
             print(f"{depth_map_data_modified.shape=} {depth_map_data_modified.dtype=}")
             depth_map_data_modified[np.logical_not(valid_points_mask)] = np.nan
-            plt.figure(10)
+            plt.figure(10, figsize=(16, 12))
             plt.clf()
             plt.subplot(1, 2, 1)
             plt.imshow(depth_map_data_modified, vmax=2.0, vmin=0.0)  # far is positive
