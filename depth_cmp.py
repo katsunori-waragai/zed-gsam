@@ -144,18 +144,11 @@ def main(opt):
 
     zed = sl.Camera()
 
-    use_hand = True  # mediapipe hand detection
-    extra_plot = True  # segmentation 結果とdepth関連の解析のためのmatplotlibでの表示
-
-    if use_hand:
-        hand_marker = zedhelper.handmark.HandMarker()
-
     init_params = predefined.InitParameters()
 
     parse_args(init_params)
 
     init_params.depth_mode = sl.DEPTH_MODE.ULTRA
-    # init_params.depth_mode = sl.DEPTH_MODE.NEURAL2
 
     err = zed.open(init_params)
     if err != sl.ERROR_CODE.SUCCESS:
@@ -164,9 +157,7 @@ def main(opt):
 
     zedhelper.util.show_params(init_params)
 
-    image = sl.Mat()
     depth_map = sl.Mat()
-    depth_for_display = sl.Mat()
     point_cloud = sl.Mat()
 
     runtime_parameters = predefined.RuntimeParameters()
@@ -179,12 +170,7 @@ def main(opt):
     while True:
         if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
             zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH)  # Retrieve depth
-            zed.retrieve_image(image, sl.VIEW.LEFT)
-            zed.retrieve_image(depth_for_display, sl.VIEW.DEPTH)  # near to camera is white
-            # Retrieve objects
             depth_map_data = depth_map.get_data()
-            cvimg = image.get_data()
-            depth_for_display_cvimg = depth_for_display.get_data()
 
             # 空間座標を得ることが必要。
             zed.retrieve_measure(point_cloud, sl.MEASURE.XYZRGBA)
@@ -196,8 +182,6 @@ def main(opt):
             valid_points_mask = np.isfinite(points_color)
             print(f"{valid_points_mask.shape=} {valid_points_mask.dtype=}")
             # points[y, x]で、元画像上の点と対応がつくのかどうか？
-
-
 
             depth_map_data_modified = depth_map_data.copy()
             print(f"{depth_map_data_modified.shape=} {depth_map_data_modified.dtype=}")
@@ -223,9 +207,7 @@ def main(opt):
                 break
 
     cv2.destroyAllWindows()
-    image.free(memory_type=sl.MEM.CPU)
     depth_map.free(memory_type=sl.MEM.CPU)
-    depth_for_display.free(memory_type=sl.MEM.CPU)
     point_cloud.free(memory_type=sl.MEM.CPU)
     zed.close()
 
