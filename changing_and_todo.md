@@ -63,13 +63,16 @@
   - それを入力ファイルに指定して、自作スクリプトが動作した。
 ```commandline
 python3 svo_recording.py -h
-python3 svo_recording.py --output_svo_file bottles.svo
+python3 svo_recording.py --output_svo_file bottles.svo2
 python3 svo_playback.py -h
 python3 svo_playback.py --input_svo_file bottles.svo2 
 python3 conf_and_depth.py --input_svo_file bottles.svo2
 ```
 
-- [] svoファイルを入力として、自作ツールが動くようにする。
+- [x] svoファイルを入力として、自作ツールが動くようにする。
+- [x] conf_and_depth.py の統計処理を関数化した。
+- [] depth_map とpointz の有効データの比率が同じことを確認した。
+- [] なぜか,point_color の有効データの比率が他より少ないことに気づいた。
 
 ## conf_and_depth.py
 
