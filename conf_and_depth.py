@@ -24,6 +24,7 @@ depth_map data, points_color とも欠損値がisnan が増えていく。
 
 import argparse
 import inspect
+from typing import Dict
 
 import cv2
 import numpy as np
@@ -153,7 +154,7 @@ def main(opt):
     zed.close()
 
 
-def stat_depth(depth_map_data: np.ndarray, percent=False):
+def stat_depth(depth_map_data: np.ndarray, percent=False) -> Dict:
     H, W = depth_map_data.shape[:2]
     stat = {}
     stat["isfinite"] = np.count_nonzero(np.isfinite(depth_map_data))
