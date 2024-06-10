@@ -10,7 +10,7 @@ import cv2
 import numpy as np
 
 import skimage
-from matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 import zedhelper.handmark
 import zedhelper.util
