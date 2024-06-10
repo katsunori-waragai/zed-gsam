@@ -24,6 +24,7 @@ depth_map data, points_color とも欠損値がisnan が増えていく。
 
 import argparse
 import inspect
+from typing import Dict
 
 import cv2
 import numpy as np
@@ -129,48 +130,42 @@ def main(opt):
             if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
                 zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH)  # Retrieve depth
                 depth_map_data = depth_map.get_data()
-                H, W = depth_map_data.shape[:2]
-                count_isfinite = np.count_nonzero(np.isfinite(depth_map_data))
-                count_isnan = np.count_nonzero(np.isnan(depth_map_data))
-                count_isneginf = np.count_nonzero(np.isneginf(depth_map_data))
-                count_isposinf = np.count_nonzero(np.isposinf(depth_map_data))
                 print(f"""
 {runtime_parameters.confidence_threshold=}
 {runtime_parameters.enable_fill_mode=}
-{depth_map_data.shape=} {depth_map_data.dtype=} %
-{count_isfinite=} {100 * count_isfinite / (W * H):.3f} %
-{count_isnan=} {100 * count_isnan / (W * H):.3f} %
-{count_isneginf=} {100 * count_isneginf / (W * H):.3f} %
-{count_isposinf=} {100 * count_isposinf / (W * H):.3f} %
+{depth_map_data.shape=} {depth_map_data.dtype=}
 """)
+                depth_map_percent = stat_depth(depth_map_data, percent=True)
+                for k, v in depth_map_percent.items():
+                    print(f"depthmap_{k} {v:.3f}")
                 # 空間座標を得ることが必要。
                 zed.retrieve_measure(point_cloud, sl.MEASURE.XYZRGBA)
                 points = point_cloud.get_data()
-                print(f"{points.shape=}")
                 assert depth_map_data.shape == points.shape[:2]
                 points_color = points[:, :, 3]
-                count_isfinite_points = np.count_nonzero(np.isfinite(points_color))
-                count_isnan_points = np.count_nonzero(np.isnan(points_color))
-                count_isneginf_points = np.count_nonzero(np.isneginf(points_color))
-                count_isposinf_points = np.count_nonzero(np.isposinf(points_color))
-                print(f"""
-{count_isfinite_points=} {100 * count_isfinite_points / (W * H): .3f} %
-{count_isnan_points=} {100 * count_isnan_points / (W * H): .3f} %
-{count_isneginf_points=} {100 * count_isneginf_points / (W * H): .3f} %
-{count_isposinf_points=} {100 * count_isposinf_points / (W * H): .3f} %
-""")
+                counts_color_percent = stat_depth(points_color, percent=True)
+                for k, v in counts_color_percent.items():
+                    print(f"pointcolor_{k} {v:.3f}")
+
                 points_z = points[:, :, 2]
-                count_isfinite_points_z = np.count_nonzero(np.isfinite(points_z))
-                count_isnan_points_z = np.count_nonzero(np.isnan(points_z))
-                count_isneginf_points_z = np.count_nonzero(np.isneginf(points_z))
-                count_isposinf_points_z = np.count_nonzero(np.isposinf(points_z))
-                print(f"""
-{count_isfinite_points_z=} {100 * count_isfinite_points_z / (W * H): .3f} %
-{count_isnan_points_z=} {100 * count_isnan_points_z / (W * H): .3f} %
-{count_isneginf_points_z=} {100 * count_isneginf_points_z / (W * H): .3f} %
-{count_isposinf_points_z=} {100 * count_isposinf_points_z / (W * H): .3f} %
-""")
+                count_z_percent = stat_depth(points_z, percent=True)
+                for k, v in count_z_percent.items():
+                    print(f"pointz_{k} {v:.3f}")
     zed.close()
+
+
+def stat_depth(depth_map_data: np.ndarray, percent=False) -> Dict:
+    H, W = depth_map_data.shape[:2]
+    stat = {}
+    stat["isfinite"] = np.count_nonzero(np.isfinite(depth_map_data))
+    stat["isnan"] = np.count_nonzero(np.isnan(depth_map_data))
+    stat["isneginf"] = np.count_nonzero(np.isneginf(depth_map_data))
+    stat["isposinf"] = np.count_nonzero(np.isposinf(depth_map_data))
+    if percent:
+        stat_percent = {k: 100 * v / (W * H) for k, v in stat.items()}
+        return stat_percent
+    else:
+        return stat
 
 
 if __name__ == "__main__":
