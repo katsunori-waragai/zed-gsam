@@ -200,12 +200,26 @@ def main(opt):
             # 点群の色情報が有効な領域をvalid_points_maskとして取得する。
             points_color = points[:, :, 3]
             valid_points_mask = np.isfinite(points_color)
+            print(f"{valid_points_mask.shape=} {valid_points_mask.dtype=}")
             # points[y, x]で、元画像上の点と対応がつくのかどうか？
 
+
+
             depth_map_data_modified = depth_map_data.copy()
-            depth_map_data_modified[:, :, 3][valid_points_mask] == np.nan
-            plt.imshow(depth_map_data_modified)
-            plt.show()
+            print(f"{depth_map_data_modified.shape=} {depth_map_data_modified.dtype=}")
+            depth_map_data_modified[np.logical_not(valid_points_mask)] = np.nan
+            plt.figure(10)
+            plt.clf()
+            plt.subplot(1, 2, 1)
+            plt.imshow(depth_map_data_modified, vmax=1.0, vmin=0.0)  # far is positive
+            plt.colorbar()
+            plt.grid(True)
+            plt.subplot(1, 2, 2)
+            plt.imshow(depth_map_data, vmax=1.0, vmin=0.0)  # far is positive
+            plt.colorbar()
+            plt.grid(True)
+            plt.draw()
+            plt.pause(0.001)
             continue
 
             if cvimg is not None:
