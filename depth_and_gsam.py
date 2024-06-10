@@ -211,11 +211,13 @@ def main(opt):
             plt.figure(10)
             plt.clf()
             plt.subplot(1, 2, 1)
-            plt.imshow(depth_map_data_modified, vmax=1.0, vmin=0.0)  # far is positive
+            plt.imshow(depth_map_data_modified, vmax=2.0, vmin=0.0)  # far is positive
+            plt.title("depth_map_data_modified")
             plt.colorbar()
             plt.grid(True)
             plt.subplot(1, 2, 2)
-            plt.imshow(depth_map_data, vmax=1.0, vmin=0.0)  # far is positive
+            plt.imshow(depth_map_data, vmax=2.0, vmin=0.0)  # far is positive
+            plt.title("depth_map_data")
             plt.colorbar()
             plt.grid(True)
             plt.draw()
