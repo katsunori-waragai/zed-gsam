@@ -40,7 +40,7 @@ bash reinstall-opencv.sh
 - Dockerfileで設定したopencv は循環import 問題を生じてしまっている。
 - 
 
-## depth-and-gsam.py
+## depth_and_gsam.py
 - ZED2i カメラをzed-sdkからの入力として、画像を取得し、対象物のセグメンテーション
 ```commandline
 python3 depth_and_gsam.py
