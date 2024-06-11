@@ -35,7 +35,7 @@ https://github.com/IDEA-Research/Grounded-Segment-Anything
 ## depth-and-gsam.py
 - ZED2i カメラをzed-sdkからの入力として、画像を取得し、対象物のセグメンテーション
 ```commandline
-python3 depth-and-sam.py
+python3 depth_and_sam.py
 ```
 - 表示内容
 - grounded-sam での検出・セグメンテーションの表示
@@ -63,6 +63,14 @@ optional arguments:
                         depth confidence_threshold(0 ~ 100)
 
 ```
+
+### 欠損値の表れ方の比較
+```commandline
+python3 depth_cmp.py
+```
+- depth_map自体の欠損値に比べ、点群での色の欠損値は多い。
+- 点群での色の欠損値に合わせて、depth_mapの欠損値を増やした画像を算出した。
+- その結果を表示する。
 
 #### SVO ファイルへの保存とそれを入力とする動作例
 ```commandline
