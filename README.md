@@ -32,10 +32,18 @@ https://github.com/IDEA-Research/Grounded-Segment-Anything
     ```
 
 ## usage
-## depth-and-gsam.py
+## reinstall-opencv.sh 
+```commandline
+bash reinstall-opencv.sh 
+```
+- opencv の入れ直しをおこなうスクリプト
+- Dockerfileで設定したopencv は循環import 問題を生じてしまっている。
+- 
+
+## depth_and_gsam.py
 - ZED2i カメラをzed-sdkからの入力として、画像を取得し、対象物のセグメンテーション
 ```commandline
-python3 depth_and_sam.py
+python3 depth_and_gsam.py
 ```
 - 表示内容
 - grounded-sam での検出・セグメンテーションの表示
@@ -74,10 +82,14 @@ python3 depth_cmp.py
 
 #### SVO ファイルへの保存とそれを入力とする動作例
 ```commandline
-python3 svo_recording.py --output_svo_file bottles.svo
+python3 svo_recording.py --output_svo_file bottles.svo2
 python3 svo_playback.py --input_svo_file bottles.svo2 
 python3 conf_and_depth.py --input_svo_file bottles.svo2
 ```
+
+ZED-SDK4.1 で動画ファイル形式がsvo2に変更になりました。(ZED-SDKではsvoでした)
+
+
 
 ### segmentation quality
 目視確認するためのplotを追加した。
