@@ -179,15 +179,17 @@ def main(opt):
     if extra_plot:
         import matplotlib.pylab as plt
         print("try matplotlib")
+        condition_str = f"mode: {init_params.depth_mode} conf: {runtime_parameters.confidence_threshold}"
         plt.clf()
-        plt.figure(1, figsize=(16, 12))
+        plt.figure(condition_str, figsize=(16, 12))
 
     while True:
         if zed.grab(runtime_parameters) == sl.ERROR_CODE.SUCCESS:
             zed.retrieve_measure(depth_map, sl.MEASURE.DEPTH)  # Retrieve depth
             zed.retrieve_image(image, sl.VIEW.LEFT)
             zed.retrieve_image(depth_for_display, sl.VIEW.DEPTH)  # near to camera is white
-            depth_map_img = depth_map.get_data()
+            # Retrieve objects
+            depth_map_data = depth_map.get_data()
             cvimg = image.get_data()
             depth_for_display_cvimg = depth_for_display.get_data()
 
@@ -195,7 +197,17 @@ def main(opt):
             zed.retrieve_measure(point_cloud, sl.MEASURE.XYZRGBA)
             points = point_cloud.get_data()
             print(f"{points.shape=}")
-            # points[y, x]で、元画像上の点と対応がつくのかどうか？
+
+            # 点群の色情報が有効な領域をvalid_points_maskとして取得する。
+            # その比較は、depth_cmp.py スクリプトで実行するようにした。
+            # このスクリプトの中では、点群の色情報が有効な領域での処理をまだ行なっていない。
+            points_color = points[:, :, 3]
+            valid_points_mask = np.isfinite(points_color)
+            print(f"{valid_points_mask.shape=} {valid_points_mask.dtype=}")
+            depth_map_data_modified = depth_map_data.copy()
+            print(f"{depth_map_data_modified.shape=} {depth_map_data_modified.dtype=}")
+            depth_map_data_modified[np.logical_not(valid_points_mask)] = np.nan
+
             if cvimg is not None:
                 print(f"{cvimg.shape=}")
                 cvimg_bgr = cvimg[:, :, :3].copy()
@@ -261,9 +273,9 @@ def main(opt):
                     plt.grid(True)
                     plt.subplot(2, 3, 5)
                     is_picked = np.array(255 * uint_masks.reshape(H, W) > 0, dtype=np.uint8)
-                    assert len(depth_map_img.shape) == 2
+                    assert len(depth_map_data.shape) == 2
                     # float型で標準化する。遠方ほどマイナスになる座標系なので, np.abs()を利用する
-                    normalized_depth = np.clip(np.abs(depth_map_img) / abs(MAX_ABS_DEPTH - MIN_ABS_DEPTH), 0.0, 1.0)
+                    normalized_depth = np.clip(np.abs(depth_map_data) / abs(MAX_ABS_DEPTH - MIN_ABS_DEPTH), 0.0, 1.0)
                     # float型からjetの擬似カラーに変更する。
                     pseudo_color_depth = matplotlib.cm.jet(normalized_depth)
                     alpha = np.array(1.0 * uint_masks.reshape(H, W) > 0, dtype=pseudo_color_depth.dtype)
@@ -292,7 +304,7 @@ def main(opt):
                     plt.grid(True)
 
                     plt.subplot(2, 3, 6)
-                    plt.imshow(np.abs(depth_map_img), vmin=0.0, vmax=2.0, cmap="jet")
+                    plt.imshow(np.abs(depth_map_data), vmin=0.0, vmax=2.0, cmap="jet")
                     plt.colorbar()
                     plt.subplot(2, 3, 3)
                     masks_cpu = gsam_module.gen_mask_img(masks).cpu().numpy()
