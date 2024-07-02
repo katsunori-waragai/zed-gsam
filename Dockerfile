@@ -16,6 +16,12 @@ RUN apt update && apt install -y --no-install-recommends wget ffmpeg=7:* \
     zstd
 RUN apt install -y python3-tk
 RUN apt clean -y && apt autoremove -y && rm -rf /var/lib/apt/lists/*
+# for depth anything
+RUN apt-get install -y build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+RUN apt-get install -y libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libdc1394-22-dev
+RUN apt-get install -y libv4l-dev v4l-utils qv4l2
+RUN apt-get install -y curl
+RUN apt-get install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
 # only for development
 RUN apt update && apt install -y eog nano
 
@@ -35,6 +41,13 @@ RUN python3 -m pip install --no-cache-dir opencv-python==3.4.18.65 \
     pycocotools==2.0.6 matplotlib==3.5.3 \
     onnxruntime==1.14.1 onnx==1.13.1 scipy mediapipe scikit-image
 RUN python3 -m pip install gdown
+# for depth anything
+RUN python3 -m pip install -U pip
+RUN python3 -m pip install loguru tqdm thop ninja tabulate
+RUN python3 -m pip install pycocotools
+RUN python3 -m pip install -U jetson-stats 
+RUN python3 -m pip install huggingface_hub onnx
+
 
 # download pre-trained files
 WORKDIR /root/Grounded-Segment-Anything
@@ -56,3 +69,13 @@ RUN mkdir -p zedhelper/
 RUN mkdir -p tutorial_script/
 COPY zedhelper/* /root/Grounded-Segment-Anything/zedhelper/
 COPY tutorial_script/*  /root/Grounded-Segment-Anything/tutorial_script/
+
+# for depth anything
+RUN cd /root && git clone https://github.com/IRCVLab/Depth-Anything-for-Jetson-Orin
+RUN cd /root/Depth-Anything-for-Jetson-Orin
+WORKDIR /root/Depth-Anything-for-Jetson-Orin
+COPY *.py ./
+RUN mkdir -p weights/
+COPY weights/* ./weights/
+COPY copyto_host.sh ./
+RUN cd  /root/Depth-Anything-for-Jetson-Orin
