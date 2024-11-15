@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zed-gsam"
+description = "gsam prot to ZED camera"
+readme = "README.md"
+version = "0.0.1"
+authors = [
+    {name = "katsunori-waragai", email="huyuhiko1128@gmail.com"},
+]
+
+requires-python = ">= 3.8"
+
+dependencies = [
+    "matplotlib",
+    "mediapipe",
+    "numpy",
+    "opencv-python==3.4.18.65",
+    "scikit-image",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+]
+
+[project.urls]
+Repository = "https://github.com/katsunori-waragai/zed-gsam"
+
+
+[tool.black]
+line-length = 120
