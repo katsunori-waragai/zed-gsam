@@ -45,7 +45,7 @@ RUN wget --quiet https://github.com/IDEA-Research/GroundingDINO/releases/downloa
 # RUN gdown --fuzzy https://drive.google.com/file/d/1qobFYrI4eyIANfBSmYcGuWRaSIXfMOQ8/view?usp=sharing
 # RUN gdown --fuzzy https://drive.google.com/file/d/1Uk17tDKX1YAKas5knI4y9ZJCo0lRVL0G/view?usp=sharing
 
-COPY *.sh *.py setup.cfg pyproject.toml /root/Grounded-Segment-Anything/
+COPY *.sh *.py pyproject.toml /root/Grounded-Segment-Anything/
 RUN python3 -m pip install .[dev]
 RUN mkdir -p zedhelper/
 RUN mkdir -p tutorial_script/

@@ -38,6 +38,8 @@ dev = [
 [project.urls]
 Repository = "https://github.com/katsunori-waragai/zed-gsam"
 
+[tool.setuptools]
+py-modules = []
 
 [tool.black]
 line-length = 120
