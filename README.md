@@ -72,6 +72,22 @@ optional arguments:
 
 ```
 
+![depth_and_gsam_console.png](figures/depth_and_gsam_console.png)
+
+コンソールへの出力
+
+bottle が４つ見つかっていて、2D画像状のbox領域が示されている。
+
+
+![depth_and_gsam.png](figures/depth_and_gsam.png)
+
+ZED SDK ではworld 座標系で上記のボトルの位置がでている。
+各平面に投影した画像を表示している。
+セグメンテーションを用いているので、ボトルの領域を画素単位で表示している。
+depth画像とインスタンスセグメンテーションとの関連付けもできている。
+
+結果の表示
+
 ### 欠損値の表れ方の比較
 ```commandline
 python3 depth_cmp.py
