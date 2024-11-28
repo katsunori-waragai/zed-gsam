@@ -3,7 +3,7 @@
 以下のpythonスクリプトは、USBカメラ入力に対して、--text_prompt　に示される対象物に対して
 インスタンスセグメンテーションを実施して、--output_dir に保存するスクリプトである。
 
-
+## 一つのカテゴリーを指定の場合
 ```commandline
 Grounded-Segment-Anything# python3 gsam_movie.py --text_prompt bottle --output_dir outputs
 ```
@@ -19,7 +19,22 @@ Grounded-Segment-Anything# python3 gsam_movie.py --text_prompt bottle --output_d
 ```
 
 -----
-![captured_0002_raw.jpg](figures/gsam_figures/captured_0002_raw.jpg)
+
+## 複数のカテゴリを指定の場合
+```
+Grounded-Segment-Anything# python3 gsam_movie.py --text_prompt "bottle.cup.:book" --output_dir outputs
+略
+box=tensor([881.9315, 496.6389, 957.6614, 703.3687]) label='bottle(0.66)'
+box=tensor([775.7297, 522.5960, 855.9427, 747.6776]) label='bottle(0.67)'
+box=tensor([619.6656, 559.8273, 727.5184, 805.8596]) label='bottle(0.68)'
+box=tensor([507.3223, 652.8929, 622.1536, 880.7135]) label='bottle(0.67)'
+box=tensor([ 973.3555,  671.3052, 1206.4487,  756.2626]) label='book(0.39)'
+box=tensor([828.6876, 678.2758, 922.6061, 811.3488]) label='cup(0.68)'
+box=tensor([ 972.5889,  634.5367, 1207.4060,  757.1379]) label='book(0.35)'
+略
+```
+
+![captured_0002_rGrounded-Segment-Anything# python3 gsam_movie.py --text_prompt "bottle.cup.:book" --output_dir outputsaw.jpg](figures/gsam_figures/captured_0002_raw.jpg)
 ![captured_0002_mask.jpg](figures/gsam_figures/captured_0002_mask.jpg)
 ![captured_0002_sam.jpg](figures/gsam_figures/captured_0002_sam.jpg)
 
