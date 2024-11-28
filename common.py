@@ -1,6 +1,6 @@
-
-
-def def parse_args(opt, init):
+import cv2
+import numpy as np
+def parse_args(opt, init):
     if len(opt.input_svo_file) > 0 and opt.input_svo_file.endswith(".svo"):
         init.set_from_svo_file(opt.input_svo_file)
         print("[Sample] Using SVO File input: {0}".format(opt.input_svo_file))
