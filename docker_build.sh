@@ -1,3 +1,3 @@
 #/bin/bash
-sudo docker build -t grounded-sam:100 .
+docker build -t grounded-sam:100 .
   
