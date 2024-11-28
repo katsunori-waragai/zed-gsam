@@ -19,7 +19,7 @@ import common
 
 import inspect
 
-MAX_ABS_DEPTH, MIN_ABS_DEPTH = 0.0, 2.0  # [m]
+MAX_ABS_DEPTH, MIN_ABS_DEPTH = 0.0, 5.0  # [m]
 
 
 def resize_image(image: np.ndarray, rate: float) -> np.ndarray:
@@ -120,7 +120,7 @@ def main(opt):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="depth map viewer")
     parser.add_argument(
         "--input_svo_file",
         type=str,
