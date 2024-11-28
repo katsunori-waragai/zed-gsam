@@ -206,6 +206,8 @@ optional arguments:
 
 ```
 
+[ZED SDK との連動がないスクリプトの実行例](on_gsam.md)
+
 ## output files
 ```commandline
 outputs/demo1_mask.jpg
