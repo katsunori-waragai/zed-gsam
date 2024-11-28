@@ -5,6 +5,25 @@
 ### gsam_movie.py
 以下のpythonスクリプトは、USBカメラ入力に対して、--text_prompt　に示される対象物に対して
 インスタンスセグメンテーションを実施して、--output_dir に保存するスクリプトである。
+```commandline
+Grounded-Segment-Anything# python3 gsam_movie.py -h                                                   
+usage: gsam_movie.py [-h] [--use_sam_hq] --text_prompt TEXT_PROMPT --output_dir OUTPUT_DIR [--box_threshold BOX_THRESHOLD]
+                     [--text_threshold TEXT_THRESHOLD]
+
+Grounded-Segment-Anything for USB camera
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --use_sam_hq          using sam-hq for prediction
+  --text_prompt TEXT_PROMPT
+                        text prompt
+  --output_dir OUTPUT_DIR, -o OUTPUT_DIR
+                        output directory
+  --box_threshold BOX_THRESHOLD
+                        box threshold
+  --text_threshold TEXT_THRESHOLD
+                        text threshold
+```
 
 #### 一つのカテゴリーを指定の場合
 ```commandline
