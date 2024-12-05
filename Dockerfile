@@ -24,17 +24,11 @@ RUN wget --quiet -O ${ZED_SDK_INSTALLER} https://download.stereolabs.com/zedsdk/
 RUN chmod +x ${ZED_SDK_INSTALLER} && ./${ZED_SDK_INSTALLER} -- silent
 
 WORKDIR /root/Grounded-Segment-Anything
-RUN python3 -m pip install --no-cache-dir -e segment_anything
+# RUN python3 -m pip install --no-cache-dir -e segment_anything
 
-RUN python3 -m pip install --no-cache-dir wheel
-RUN python3 -m pip install --no-cache-dir --no-build-isolation -e GroundingDINO
 
 WORKDIR /root
 RUN python3 -m pip uninstall --yes opencv-python-headless opencv-contrib-python
-RUN python3 -m pip install --no-cache-dir opencv-python==3.4.18.65 \
-    pycocotools==2.0.6 matplotlib==3.5.3 \
-    onnxruntime==1.14.1 onnx==1.13.1 scipy mediapipe scikit-image
-RUN python3 -m pip install gdown
 
 # download pre-trained files
 WORKDIR /root/Grounded-Segment-Anything
@@ -51,7 +45,8 @@ RUN wget --quiet https://github.com/IDEA-Research/GroundingDINO/releases/downloa
 # RUN gdown --fuzzy https://drive.google.com/file/d/1qobFYrI4eyIANfBSmYcGuWRaSIXfMOQ8/view?usp=sharing
 # RUN gdown --fuzzy https://drive.google.com/file/d/1Uk17tDKX1YAKas5knI4y9ZJCo0lRVL0G/view?usp=sharing
 
-COPY *.sh *.py setup.cfg /root/Grounded-Segment-Anything/
+COPY *.sh *.py pyproject.toml /root/Grounded-Segment-Anything/
+RUN python3 -m pip install .[dev]
 RUN mkdir -p zedhelper/
 RUN mkdir -p tutorial_script/
 COPY zedhelper/* /root/Grounded-Segment-Anything/zedhelper/
